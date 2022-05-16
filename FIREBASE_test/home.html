@@ -7,25 +7,33 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
     <section id="header">
         <a href="#"><img src="img/logoMimi.jpg" class="logo" alt=""></a>
-        <div id="navbar">
-            <li><a class="active" href="home.html">Home</a></li>
-            <li><a href="#">Shop</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#"><i class="fa fa-shopping-bag"></i></a></li>
-
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="home.html">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag"></i></a></li>
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
         </div>
     </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
 
     <section id="hero">
         <h4>Trade-in-offer</h4>
-        <h2>Super value deals</h2>
-        <h1>On all products</h1>
-        <p>Save more with coupons & up to 70% off!</p>
+        <h2>Super oferte</h2>
+        <h1>La toate produsele</h1>
+        <p>Reducere pana la 70%!</p>
         <button>Shop Now</button>
     </section>
 
@@ -74,12 +82,24 @@
 
     <section id="banner" class="section-m1">
         <h4>Repair Services</h4>
-        <h2>Up to <span>70% Off</span> - All t-Shirts & Accessories</h2>
-        <button class="normal">Explore More</button>
+        <h2>Reducere de pana la <span>70%</span> - Toate tricourile</h2>
+        <button class="normal">Vezi mai multe</button>
     </section>
 
     <footer class="section-p1">
         <div class="col">
+            <img class="logof" src="img/logoMimi.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <i class="fab fa-facebook fb"></i>
+                <i class="fab fa-instagram ig"></i>
+                <i class="fab fa-snapchat sc"></i>
+                <i class="fab fa-twitter tw"></i>
+            </div>
+           
+        </div>
+        <!-- <div class="col">
             <img class="logof" src="img/logoMimi.jpg" alt="">
             <h4>Contact</h4>
             <p><strong>Address: </strong>strada bla bla bla</p>
@@ -104,13 +124,33 @@
             <a href="#">Contact Us</a>
         </div>
         <div class="col">
-            <h4>Mu Account</h4>
+            <h4>My Account</h4>
             <a href="#">Sign In </a>
             <a href="#">View Cart</a>
             <a href="#">My Wishlist</a>
             <a href="#">Track My Order</a>
             <a href="#">Help</a>
         </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In </a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/appStore.png" alt="">
+                <img class="bord" src="img/google.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <div class="row">
+                <img class="bord" src="img/visamaster.png" alt="">
+            </div>
+        </div> -->
     </footer>
 
 </body>
