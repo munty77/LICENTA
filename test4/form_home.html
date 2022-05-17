@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css"> 
+    <link rel="stylesheet" href="style_subnav.css">
+</head>
+<body>
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="form_home.html">Acasa</a></li>
+                <li><a href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li><ul class="subnav">
+                    <li><a href="#"><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a href="#" id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li>munty77</li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+
+    <section id="hero">
+        <h4>Trade-in-offer</h4>
+        <h2>Super oferte</h2>
+        <h1>La toate produsele</h1>
+        <p>Reducere pana la -70%!</p>
+        <button type="button" onclick="location.href='form_products.html'">Shop Now</button>
+    </section>
+
+    <section id="product1" class="section-p1">
+        <h2>Produse recomandate</h2>
+        <p>New Collection</p>
+        <div class="pro-container">
+            <div class="pro">
+                <a id="heart1"><i id="heartA" class="fas fa-heart heart"></i></a>
+                <img id="prod1" onclick="action()" src="img/home_tricou1.jpg" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()" href ="#"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart2"><i id="heartB" class="fas fa-heart heart"></i></a>
+                <img id="prod2" onclick="action()" src="img/home_tricou2.jfif" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()" href ="#"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart3"><i id="heartC" class="fas fa-heart heart"></i></a>
+                <img id="prod3" onclick="action()" src="img/home_bluza1.jfif" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()" href ="#"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart4"><i id="heartD" class="fas fa-heart heart"></i></a>
+                <img id="prod4" onclick="action()" src="img/home_bluza2.jfif" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()" href ="#"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+        </div>
+    </section>
+    <script>
+        const heart1 = document.getElementById('heart1');
+        const heartA = document.getElementById('heartA');
+        const heart2 = document.getElementById('heart2');
+        const heartB = document.getElementById('heartB');
+        const heart3 = document.getElementById('heart3');
+        const heartC = document.getElementById('heartC');
+        const heart4 = document.getElementById('heart4');
+        const heartD = document.getElementById('heartD');
+        if(heart1){
+            heart1.addEventListener('click', () => {
+                if(heartA.classList.contains("inactiveHeart") === true){
+                    heartA.classList.remove("inactiveHeart");
+                    heartA.classList.add("activeHeart");
+                }
+                else{
+                    heartA.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart2){
+            heart2.addEventListener('click', () => {
+                if(heartB.classList.contains("inactiveHeart") === true){
+                    heartB.classList.remove("inactiveHeart");
+                    heartB.classList.add("activeHeart");
+                }
+                else{
+                    heartB.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart3){
+            heart3.addEventListener('click', () => {
+                if(heartC.classList.contains("inactiveHeart") === true){
+                    heartC.classList.remove("inactiveHeart");
+                    heartC.classList.add("activeHeart");
+                }
+                else{
+                    heartC.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart4){
+            heart4.addEventListener('click', () => {
+                if(heartD.classList.contains("inactiveHeart") === true){
+                    heartD.classList.remove("inactiveHeart");
+                    heartD.classList.add("activeHeart");
+                }
+                else{
+                    heartD.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        // The function below will start the confirmation dialog
+        function confirmAction() {
+          let confirmAction = confirm("Sunteti sigur ca doriti sa adaugati produsul in cosul de cumparaturi?");
+          if (confirmAction) {
+            window.location.href = "form_cart.html";
+          }
+        }
+
+        function action() {
+            window.location.href = "form_details.html";
+        }
+      </script>
+
+    <section id="banner" class="section-m1">
+        <h4>Repair Services</h4>
+        <h2>Reducere pana la <span>-70%</span> - Toate tricourile</h2>
+        <button class="normal" type="button" onclick="location.href='form_products.html'">Vezi mai multe</button>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+           
+        </div>
+        <!-- <div class="col">
+            <img class="logof" src="img/logoMimi.jpg" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address: </strong>strada bla bla bla</p>
+            <p><strong>Phone: </strong>+40784744280</p>
+            <p><strong>Hours: </strong>10:00 - 18:00, Mon-Sat</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-snapchat"></i>
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In </a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In </a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/appStore.png" alt="">
+                <img class="bord" src="img/google.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <div class="row">
+                <img class="bord" src="img/visamaster.png" alt="">
+            </div>
+        </div> -->
+    </footer>
+
+</body>
+</html>
