@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details Page</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css">
+    <link rel="stylesheet" href="style_subnav.css">
+</head>
+<body>
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="form_home.html">Acasa</a></li>
+                <li><a class="active" href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li>
+                <ul class="subnav">
+                    <li><a><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li>munty77</li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+    
+    <section id="prodetails" class="section-p1">
+        <div class="single-pro-image">
+            <img src="img/products/haine/clothes.jpg" width="100%" id="mainImg" alt="">
+            <div class="small-img-group">
+                <div class="small-img-col">
+                    <img src="img/products/haine/hat2.jpg" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="img/products/haine/hat2.jpg" width="100%" class="small-img" alt="">
+                </div>
+                <div class="small-img-col">
+                    <img src="img/products/haine/hat2.jpg" width="100%" class="small-img" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="single-pro-details">
+            <h6>Home / T-Shirt</h6>
+            <h4>Women's Fashion T-Shirt</h4>
+            <h2>$139.00</h2>
+            <select>
+                <option>Select Size</option>
+                <option>XXL</option>
+                <option>XL</option>
+                <option>L</option>
+                <option>M</option>
+                <option>S</option>
+                <option>XS</option>
+                <option>XXS</option>
+            </select>
+            <input type="number" value="1">
+            <button class="normal">Add to cart</button>
+            <h4>Product Details</h4>
+            <span>
+                <b>Compoziție</b><br>
+                    -Exterior<br>
+                    -83% acrilic<br>
+                    -12% poliamida<br>
+                    -5% poliester
+            </span>
+        </div>
+    </section>
+
+    <section id="product1" class="section-p1">
+        <h2>Produse recomandate</h2>
+        <p>New Collection</p>
+        <div class="pro-container"> 
+            <div class="pro">
+                <a id="heart9"><i id="heartI" class="fas fa-heart heart"></i></a>
+                <img id="prod9" onclick="action()" src="img/products/haine/sweater1.jpg" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart10"><i id="heartJ" class="fas fa-heart heart"></i></a>
+                <img id="prod10" onclick="action()" src="img/products/haine/sweater2.jpg" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart11"><i id="heartK" class="fas fa-heart heart"></i></a>
+                <img id="prod11" onclick="action()" src="img/products/haine/hat1.jpg" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+            <div class="pro">
+                <a id="heart12"><i id="heartL" class="fas fa-heart heart"></i></a>
+                <img id="prod12" onclick="action()" src="img/products/haine/hat2.jpg" alt="">
+                <div class="des">
+                    <span>Adidas</span>
+                    <h5>Cartoon Astronaut T-Shirts</h5>
+                    <h4>$34</h4>
+                </div>
+                <a onclick="confirmAction()"><i class="fa fa-shopping-cart cart"></i></a>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        const heart1 = document.getElementById('heart1');
+        const heartA = document.getElementById('heartA');
+        const heart2 = document.getElementById('heart2');
+        const heartB = document.getElementById('heartB');
+        const heart3 = document.getElementById('heart3');
+        const heartC = document.getElementById('heartC');
+        const heart4 = document.getElementById('heart4');
+        const heartD = document.getElementById('heartD');
+
+        
+        if(heart9){
+            heart9.addEventListener('click', () => {
+                if(heartI.classList.contains("inactiveHeart") === true){
+                    heartI.classList.remove("inactiveHeart");
+                    heartI.classList.add("activeHeart");
+                }
+                else{
+                    heartI.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart10){
+            heart10.addEventListener('click', () => {
+                if(heartJ.classList.contains("inactiveHeart") === true){
+                    heartJ.classList.remove("inactiveHeart");
+                    heartJ.classList.add("activeHeart");
+                }
+                else{
+                    heartJ.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart11){
+            heart11.addEventListener('click', () => {
+                if(heartK.classList.contains("inactiveHeart") === true){
+                    heartK.classList.remove("inactiveHeart");
+                    heartK.classList.add("activeHeart");
+                }
+                else{
+                    heartK.classList.add("inactiveHeart");
+                } 
+            })
+        }
+        if(heart12){
+            heart12.addEventListener('click', () => {
+                if(heartL.classList.contains("inactiveHeart") === true){
+                    heartL.classList.remove("inactiveHeart");
+                    heartL.classList.add("activeHeart");
+                }
+                else{
+                    heartL.classList.add("inactiveHeart");
+                } 
+            })
+        }
+
+
+
+
+        // The function below will start the confirmation dialog
+        function confirmAction() {
+            let confirmAction = confirm("Sunteti sigur ca doriti sa adaugati produsul in cosul de cumparaturi?");
+            let confirmAction2 = confirm("Doriti sa vizualizati cosul de cumparaturi?");
+            if (confirmAction) {
+                if(confirmAction2){
+                    window.location.href = "form_cart.html";
+                }
+          }
+        }
+
+        function action() {
+            window.location.href = "form_details.html";
+        }
+      </script>
+    <script>
+        var mainImg = document.getElementById("mainImg");
+        var smallimg = document.getElementsByClassName("small-img");
+
+        smallimg[0].onclick = function(){
+            mainImg.src = smallimg[0].src;
+        }
+        smallimg[1].onclick = function(){
+            mainImg.src = smallimg[1].src;
+        }
+        smallimg[2].onclick = function(){
+            mainImg.src = smallimg[2].src;
+        }
+        smallimg[3].onclick = function(){
+            mainImg.src = smallimg[3].src;
+        }
+    </script>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
