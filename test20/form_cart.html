@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart Page</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css"> 
+    <link rel="stylesheet" href="style_subnav.css">
+</head>
+<body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+        import {getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4QbCtMwmAygKrUaubiIHyHzgHTxYRzxs",
+            authDomain: "test-autentificare.firebaseapp.com",
+            databaseURL: "https://test-autentificare-default-rtdb.firebaseio.com",
+            projectId: "test-autentificare",
+            storageBucket: "test-autentificare.appspot.com",
+            messagingSenderId: "297047922567",
+            appId: "1:297047922567:web:1ec8c6da201fe836c56522"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        /////**************************/////
+        
+        const uid = sessionStorage.getItem("uid");
+        console.log("UID logat");
+        console.log(uid);
+        const db = getDatabase();
+        const dbRef = ref(db);
+        get(child(dbRef, "Conturi/" + uid))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const displayName = snapshot.val().Nume;
+                console.log(displayName);
+                const username =  snapshot.val().Utilizator;
+                console.log(username);
+                if(username == ''){
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = displayName;
+                }else{
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = username;
+                }
+            } else {
+                console.log("No data available");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        /////**************************/////
+
+        document.getElementById("signout").addEventListener('click', () => {
+            signOut(auth)
+            .then(()=>{
+                console.log("Utilizatorul a fost deconectat");
+                window.location.replace("form_login.html");
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        });
+    
+        ///////////////////////////////////
+
+
+        var tbody = document.getElementById('tbody-cart');
+
+        function AddItem( img, den, prt, can){
+            let tr = document.createElement('tr');
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+            let td4 = document.createElement('td');
+            let td5 = document.createElement('td');
+            let td6 = document.createElement('td');
+            let td7 = document.createElement('td');
+
+            var matches = prt.match(/(\d+)/);
+
+            td1.innerHTML = '<a id="dlt"><i class="fas fa-times-circle del"></i></a>';
+            td2.innerHTML = '<img src="' + img + '">';
+            td3.innerHTML = den;
+            td4.innerHTML = prt;
+            td5.innerHTML = '<input id="nr" type="number" value="' + can + '" min="1">';
+            td6.innerHTML = matches[0]*can + "lei";
+            td7.innerHTML = '<a id="view"><i class="fas fa-eye eye"></i></a>';
+
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+            tr.appendChild(td6);
+            tr.appendChild(td7);
+
+            tbody.appendChild(tr);
+
+            document.getElementById("dlt").addEventListener('click', () => {
+                console.log("delete");
+                remove(child(dbRef, "Conturi/" + uid + "/CosCumparaturi"))
+                .then(() => {
+                    alert("Produsul a fost sters din cosul de cumparaturi!");
+                    //GetAllData();
+                })
+                .catch((error) => {
+                    alert("Eroare: " + error);
+                })
+            })
+
+            document.getElementById("view").addEventListener('click', () => {
+                window.location.href = "/form_details.html";
+            })
+
+            document.getElementById("nr").addEventListener('change', () => {
+                var nr = document.getElementById("nr").value;
+                td6.innerHTML = matches[0]*nr + "lei";
+                var subtotal = td6.innerHTML;
+
+                console.log(matches[0]);
+                console.log(document.getElementById("nr").value);
+                console.log(td6.innerHTML);
+
+
+                update(child(dbRef, "Conturi/" + uid + "/CosCumparaturi"), {
+                    Cantitate: nr,
+                    Subtotal: subtotal
+                })
+                .then(()=>{
+                    console.log("Datele au fost actualizate");
+                    //window.location.reload(true);
+                })
+                .catch((error)=>{
+                    console.log(error);
+                })
+            })
+        }
+
+        function AddAllItems(ProdCart){
+            tbody.innerHTML = "";
+            ProdCart.forEach(element => {
+                AddItem(element.Imagine, element.Denumire, element.Pret, element.Cantitate)
+            })
+        }
+
+
+        function GetAllData(){
+            const dbRef = ref(db);
+            get(child(dbRef, "Conturi/" + uid + "/CosCumparaturi" ))
+            .then((snapshot) => {
+                var prod = [];
+                snapshot.forEach(childSnapshot => {
+                    prod.push(childSnapshot.val());
+                });
+                console.log(prod);
+                AddAllItems(prod);
+            })
+            .catch((error) => {
+                console.log("Mesaj eroare " + error);
+            })
+        }
+        window.onload = GetAllData;
+    
+    
+    </script>
+
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="form_home.html">Acasa</a></li>
+                <li><a href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li>
+                <ul class="subnav">
+                    <li><a class="active"><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a class="active" href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li><label id="user-db">-</label></li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a id="signout" href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+
+    <section id="header-banner-cart">
+        <h1><span>#shopwithus</span></h1>
+    </section>
+
+    <section id="cart" class="section-p1">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <td>Sterge</td>
+                    <td>Imagine</td>
+                    <td>Denumire</td>
+                    <td>Pret</td>
+                    <td>Cantitate</td>
+                    <td>Subtotal</td>
+                    <td>Detalii</td>
+                </tr>
+            </thead>
+            <tbody id="tbody-cart">
+                <!-- <tr>
+                    <td><a><i class="fas fa-times-circle del"></i></a></td>
+                    <td><img src="img/products/haine/hat2.jpg" alt=""></td>
+                    <td>Cartoon Astronaut Hat</td>
+                    <td>$118</td>
+                    <td><input type="number" value="1" min="1"></td>
+                    <td>$118</td>
+                    <td><a><i class="fas fa-eye eye"></i></a></td>
+                </tr>
+                <tr>
+                    <td><a><i class="fas fa-times-circle del"></i></a></td>
+                    <td><img src="img/products/haine/hat1.jpg" alt=""></td>
+                    <td>Cartoon Astronaut Hat</td>
+                    <td>$118</td>
+                    <td><input type="number" value="1" min="1"></td>
+                    <td>$118</td>
+                    <td><a><i class="fas fa-eye eye"></i></a></td>
+                </tr>
+                <tr>
+                    <td><a><i class="fas fa-times-circle del"></i></a></td>
+                    <td><img src="img/products/haine/clothes.jpg" alt=""></td>
+                    <td>Cartoon Astronaut Hat</td>
+                    <td>$118</td>
+                    <td><input type="number" value="1" min="1"></td>
+                    <td>$118</td>
+                    <td><a><i class="fas fa-eye eye"></i></a></td>
+                </tr> -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="cart-add" class="section-p1">
+        <div></div>
+        <div id="subtotal">
+            <h3>Nota de Plata</h3>
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>$335</td>
+                </tr>
+                <tr>
+                    <td>Transport</td>
+                    <td>Gratuit</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>$335</strong></td>
+                </tr>
+            </table>
+            <button class="normal">Finalizare cumparaturi</button>
+        </div>
+    </section>
+
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
