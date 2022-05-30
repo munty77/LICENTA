@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css">
+    <link rel="stylesheet" href="style_subnav.css">
+    <style>
+        #addButton{
+            display: none;
+        }
+        .isAdmin{
+            display: inline-flex!important;
+            flex-direction: column;
+        }
+        #display-image{
+            width: 400px;
+            height: 225px;
+            border: 1px solid black;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+   
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="form_home.html">Acasa</a></li>
+                <li><a class="active" href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li>
+                <ul class="subnav">
+                    <li><a><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li><label id="user-db">-</label></li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a id="signout" href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+    
+    <section id="header-banner">
+        <h1><span>#stayhome</span></h1>
+    </section>
+
+    <section id="product1" class="section-p1">
+        <p>New Collection</p>
+        <!-- Button trigger modal -->
+        <div id="addButton">
+            <input id="nameProd" type="text" class="search-query" placeholder="Nume produs">
+            <input id="brandProd" type="text" class="search-query" placeholder="Brand">
+            <input id="pretProd" type="text" class="search-query" placeholder="Pret">
+            <input type="file" id="image-input" accept="image/jpeg, image/png, image/jpg">
+            <div id="display-image"></div>
+            <button id="btnAdd" type="button" class="btn btn-primary">Adauga</button>
+        </div>
+        
+        <script>
+            const image_input = document.querySelector("#image-input");
+            image_input.addEventListener("change", function() {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    const uploaded_image = reader.result;
+                    document.querySelector("#display-image").style.backgroundImage = `url(${uploaded_image})`;
+                });
+                reader.readAsDataURL(this.files[0]);
+            });
+        </script>
+
+        <div id="divBody" class="pro-container">
+
+        </div>
+    </section>
+    
+    
+    <script type = "module">
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+        import {getDatabase, ref, set, get, child, remove, push, update} from "https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4QbCtMwmAygKrUaubiIHyHzgHTxYRzxs",
+            authDomain: "test-autentificare.firebaseapp.com",
+            databaseURL: "https://test-autentificare-default-rtdb.firebaseio.com",
+            projectId: "test-autentificare",
+            storageBucket: "test-autentificare.appspot.com",
+            messagingSenderId: "297047922567",
+            appId: "1:297047922567:web:1ec8c6da201fe836c56522"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        /////**************************/////
+        const uid = sessionStorage.getItem("uid");
+        console.log("UID logat:");
+        console.log(uid);
+
+        const db = getDatabase();
+        const dbRef = ref(db);
+
+        var btn = document.getElementById("addButton");
+
+        get(child(dbRef, "Conturi/" + uid))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                if(snapshot.val().Rol && snapshot.val().Rol === "admin")
+                {
+                    console.log("Rolul este:");
+                    console.log(snapshot.val().Rol);
+                    btn.classList.add("isAdmin");
+                }
+                
+                const displayName = snapshot.val().Nume;
+                console.log("Nume si Prenume:");
+                console.log(displayName);
+                const username =  snapshot.val().Utilizator;
+                console.log("Nume utilizator:");
+                console.log(username);
+                if(username == ''){
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = displayName;
+                }else{
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = username;
+                }
+            } else {
+                console.log("No data available");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        /////**************************/////
+
+        document.getElementById("signout").addEventListener('click', () => {
+            signOut(auth)
+            .then(()=>{
+                console.log("Utilizatorul a fost deconectat");
+                window.location.replace("form_login.html");
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        });
+
+
+        ///////////////////////////////////////////////////////////////////////////
+
+
+        var lstFav = [];
+        document.getElementById("btnAdd").addEventListener('click', () => {
+            get(child(dbRef, "Produse/")).then((snapshot) => {
+                    var nume = document.getElementById("nameProd").value;
+                    var brand = document.getElementById("brandProd").value;
+                    var pret = document.getElementById("pretProd").value;
+                    var img = document.getElementById("image-input").value;
+                    img = img.replace("C:\\fakepath\\", "img/products/haine/");
+
+                    push(ref(db, "Produse/"),{
+                        FavoriteBy: lstFav,
+                        Nume: nume,
+                        Brand: brand,
+                        Pret: pret,
+                        Poza: img
+                    })
+                    .then(response => {
+                        console.log("Id produs:");
+                        console.log(response.key);
+                        alert("Produsul a fost adaugat cu succes!");
+                        window.location.reload(true);
+                    })
+                    .catch((error) => {
+                        alert("Eroare: " + error);
+                    })
+            });
+        });
+
+        async function returnAsyncKey(key){
+            return new Promise  (resolve => {
+                resolve(key);
+            })
+        }
+
+        var divBody = document.getElementById('divBody');
+        var count = 0;
+        let prodMap = new Map();
+        function AddItem(key, brand, imagine, nume, pret, favoriteBy){
+            let div = document.createElement('div');
+            div.className = "pro";
+                let td1 = document.createElement('a');
+                    td1.id = "love"+count;
+                let td2 = document.createElement('img');
+                let td3 = document.createElement('span');
+                let td4 = document.createElement('h5');
+                let td5 = document.createElement('h4');
+                    td3.className = "des";
+                    td4.className = "des";
+                    td5.className = "des";
+                let td6 = document.createElement('a');
+                    td6.id = "cos";
+            
+
+            td1.innerHTML = '<i class="fas fa-heart heart"></i>';
+            td1.children[0].classList.add("inactiveHeart");
+            
+            td2.src = imagine;
+            td3.innerHTML = brand;
+            td4.innerHTML = nume;
+            td5.innerHTML = pret + ' lei';
+            td6.innerHTML = '<i class="fa fa-shopping-cart cart"></i>';
+
+            div.appendChild(td1);
+            div.appendChild(td2);
+            div.appendChild(td3);
+            div.appendChild(td4);
+            div.appendChild(td5);
+            div.appendChild(td6);
+
+            divBody.appendChild(div);
+
+            document.getElementById("cos").addEventListener('click', () => {
+                var confirmAction = confirm("Sunteti sigur ca doriti sa adaugati produsul in cosul de cumparaturi?");
+                var confirmAction2 = confirm("Doriti sa vizualizati cosul de cumparaturi?");
+                // if (confirmAction) {
+                //     set(ref(db, "Conturi/" + uid + "/CosCumparaturi" + "/prod-cos1"),{
+                //         Imagine: document.getElementById("prod1").src,
+                //         Denumire: document.getElementById("den1").innerHTML,
+                //         Pret: document.getElementById("pr1").innerHTML,
+                //         Cantitate: 1,
+                //         Subtotal: ''
+                //     })
+                //     .then(() => {
+                //         alert("Produsul a fost adaugat in cosul de cumparaturi!");
+                //     })
+                //     .catch((error) => {
+                //         alert("Eroare: " + error);
+                //     })
+                    // if(confirmAction2){
+                        window.location.href = "/form_cart.html";
+                    // }
+               // }
+            })
+
+            prodMap.set(td1.id, key);
+            console.log("ProdMap:"); 
+            console.log(prodMap);
+            
+            var love = document.getElementById("love" + count);
+            
+            love.addEventListener('click', () => {
+                if(td1.children[0].classList.contains("inactiveHeart") === true){
+                    td1.children[0].classList.remove("inactiveHeart");
+                    td1.children[0].classList.add("activeHeart");
+                    
+                    let key = prodMap.get(td1.id);
+                    console.log("Cheie event-love: " + key);
+
+                    let allFavorite = new Set();
+                    if(favoriteBy){
+                        allFavorite.add(uid);
+                        favoriteBy.forEach(item => {
+                            allFavorite.add(item);
+                        })
+                    }else{
+                        allFavorite.add(uid); 
+                    }
+
+                    console.log("Lista de utilizatori cu produs favorit:");
+                    console.log(allFavorite);
+
+
+                    update(child(dbRef, "Produse/" +  key), {
+                        FavoriteBy: Array.from(allFavorite)
+                    })
+                    .then(()=>{
+                        console.log("ListaFav a fost actualizata");
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    })
+                }
+                else{
+                    td1.children[0].classList.remove("activeHeart");
+                    td1.children[0].classList.add("inactiveHeart");
+                    
+                    console.log("Lista de utilizatori cu produs favorit dupa stergere:");
+                    console.log(favoriteBy);
+
+                    console.log("UID-ul curent:");
+                    console.log(uid);
+
+                    update(child(dbRef, "Produse/" +  key), {
+                        FavoriteBy: favoriteBy
+                    })
+                    .then(()=>{
+                        console.log("ListaFav a fost actualizata");
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    })
+                }
+            });
+            count ++;
+
+           
+            if(favoriteBy.includes(uid)){
+                console.log("loveOn--------------------");
+                td1.children[0].classList.remove("inactiveHeart");
+                    td1.children[0].classList.add("activeHeart");
+            }else{
+                console.log("loveOff--------------------");
+                td1.children[0].classList.remove("activeHeart");
+                    td1.children[0].classList.add("inactiveHeart");
+            }
+        
+        }
+
+        
+ 
+        function AddAllItems(Produse){
+            divBody.innerHTML = "";
+            Produse.forEach(element => {
+                console.log("Cheia produsului adaugat:");
+                console.log(element.key);
+                console.log("FavoriteBy:");
+                console.log(element.val().FavoriteBy);
+                AddItem(element.key, element.val().Brand, element.val().Poza, element.val().Nume, element.val().Pret, element.val().FavoriteBy)
+            })
+        }
+
+        function GetAllData(){
+            const dbRef = ref(db);
+            get(child(dbRef, "Produse/" ))
+            .then((snapshot) => {
+                var prod = [];
+                snapshot.forEach(childSnapshot => {
+                    console.log("Child -> id-urile produselor:");
+                    console.log(childSnapshot.key);
+                    prod.push(childSnapshot);
+                });
+                //console.log(prod);
+                AddAllItems(prod);
+            })
+            .catch((error) => {
+                console.log("Mesaj eroare " + error);
+            })
+        }
+        window.onload = GetAllData;
+    </script>
+
+    <script>
+        // The function below will start the confirmation dialog
+        function confirmAction() {
+            let confirmAction = confirm("Sunteti sigur ca doriti sa adaugati produsul in cosul de cumparaturi?");
+            let confirmAction2 = confirm("Doriti sa vizualizati cosul de cumparaturi?");
+            if (confirmAction) {
+                if(confirmAction2){
+                    window.location.href = "form_cart.html";
+                }
+          }
+        }
+
+        function action() {
+            window.location.href = "form_details.html";
+        }
+    </script> 
+
+     <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+        </div>
+    </footer> 
+
+</body>
+</html>
