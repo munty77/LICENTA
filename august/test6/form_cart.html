@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart Page</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css"> 
+    <link rel="stylesheet" href="style_subnav.css">
+    <style>
+        p{
+            font-size: 13px;
+            margin-top: 1px;
+        }
+    </style>
+</head>
+<body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+        import {getDatabase, ref, set, get, child, update, remove} from "https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4QbCtMwmAygKrUaubiIHyHzgHTxYRzxs",
+            authDomain: "test-autentificare.firebaseapp.com",
+            databaseURL: "https://test-autentificare-default-rtdb.firebaseio.com",
+            projectId: "test-autentificare",
+            storageBucket: "test-autentificare.appspot.com",
+            messagingSenderId: "297047922567",
+            appId: "1:297047922567:web:1ec8c6da201fe836c56522"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        /////**************************/////
+        
+        const uid = sessionStorage.getItem("uid");
+        console.log("UID logat");
+        console.log(uid);
+        const db = getDatabase();
+        const dbRef = ref(db);
+        get(child(dbRef, "Conturi/" + uid))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const displayName = snapshot.val().Nume;
+                console.log(displayName);
+                const username =  snapshot.val().Utilizator;
+                console.log(username);
+                if(username == ''){
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = displayName;
+                }else{
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = username;
+                }
+            } else {
+                console.log("No data available");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        /////**************************/////
+
+        document.getElementById("signout").addEventListener('click', () => {
+            signOut(auth)
+            .then(()=>{
+                console.log("Utilizatorul a fost deconectat");
+                window.location.replace("form_login.html");
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        });
+    
+        ///////////////////////////////////
+
+
+        var tbody = document.getElementById('tbody-cart');
+       
+        function AddItem(cartKey, img, br, den, prt, can, subtotal){
+
+            get(child(dbRef, "Produse/" +  cartKey + "/BoughtBy/" + uid)).then((snapshot) => {
+                if(snapshot.exists()){
+                    
+                    let tr = document.createElement('tr');
+                        tr.id = "tr-" + cartKey;
+                    let td1 = document.createElement('td');//x-sterge
+                    let td2 = document.createElement('td');//imagine
+                    let td3 = document.createElement('td');//brand
+                    let td4 = document.createElement('td');//denumire
+                    let td5 = document.createElement('td');//pret
+                    let td6 = document.createElement('td');//cantitate
+                    let td7 = document.createElement('td');//subtotal
+                    let td8 = document.createElement('td');//vizualizare
+
+                    td1.innerHTML = '<a id="dlt-' + cartKey + '"><i class="fas fa-times-circle del"></i></a>';
+                    td2.innerHTML = '<img src="' + img + '">';
+                    td3.innerHTML = br;
+                    td4.innerHTML = den;
+                    td5.innerHTML = prt + " lei";
+                    td6.innerHTML = '<input id="nr' + cartKey + '" type="number" value="' + can + '" min="1">';
+                    td7.innerHTML = subtotal + " lei";
+                    td8.innerHTML = '<a id="view"><i class="fas fa-eye eye"></i></a>';
+
+                    console.log("cartKey is, " + cartKey);
+
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tr.appendChild(td5);
+                    tr.appendChild(td6);
+                    tr.appendChild(td7);
+                    tr.appendChild(td8);
+
+                    tbody.appendChild(tr);
+
+                    document.getElementById("dlt-" + cartKey).addEventListener('click', () => {
+                        console.log("delete");
+                        remove(child(dbRef, "Produse/" + cartKey + "/BoughtBy/" + uid))
+                        .then(() => {
+                            alert("Produsul a fost sters din cosul de cumparaturi!");
+                            document.getElementById("tr-" + cartKey).remove();
+                        })
+                        .catch((error) => {
+                            alert("Eroare: " + error);
+                        })
+                    })
+
+                    document.getElementById("view").addEventListener('click', () => {
+                        window.location.href = "/form_details.html";
+                    })
+
+                    document.getElementById("nr" + cartKey).addEventListener('change', () => {
+                        var nr = document.getElementById("nr" + cartKey).value;
+                        td7.innerHTML = prt*nr + " lei";
+                        var subtotal2 = prt*nr;
+
+
+                        update(child(dbRef, "Produse/" +  cartKey + "/BoughtBy/" + uid), {
+                            Cantitate: nr,
+                            Subtotal: subtotal2
+                        })
+                        .then(()=>{
+                            console.log("Datele au fost actualizate");
+                            //window.location.reload(true);
+                        })
+                        .catch((error)=>{
+                            console.log(error);
+                        })
+                    })
+                    console.log("Utilizatorul a cumparat acest produs: " + cartKey);
+                }else{
+                    console.log("Utilizatorul nu a cumparat acest produs: " + cartKey);
+                }
+                
+            })
+            
+        }
+
+        var subPlata = document.getElementById("subtotalPlata");
+            subPlata.innerHTML = 0;
+        var transport = document.getElementById("transport");
+        var totalPlata = document.getElementById("totalPlata"); 
+
+        function AddAllItems(ProdCart){
+            tbody.innerHTML = "";
+            ProdCart.forEach(element => {
+                get(child(dbRef, "Produse/" + element.key + "/BoughtBy/" + uid)).then((snapshot) => {
+                    let brand = element.val().Brand;
+                    console.log("Brand: " + brand);
+                        let subtotal = snapshot.val().Subtotal;
+                        let cantitate = snapshot.val().Cantitate;
+                        let pret = element.val().Pret;
+                        let nume = element.val().Nume;
+                        
+                        let poza = element.val().Poza;
+
+
+
+                        console.log("Subtotal: " + subtotal);
+                        console.log("Cantitate: " + cantitate);
+
+                        AddItem(element.key, poza, brand, nume, pret, cantitate, subtotal)
+                        
+                        subPlata.innerHTML =  parseInt(subPlata.innerHTML) + parseInt(subtotal);
+                        console.log("  ");
+                        console.log("SubPlata: " + subPlata.innerHTML);
+                        sessionStorage.setItem("subPlata", subPlata.innerHTML);
+                        
+                        
+                        totalPlata.innerHTML = parseInt(subPlata.innerHTML) + parseInt(transport.innerHTML);
+                    
+                })
+                .catch((error) => {
+                    console.log("Mesaj eroare " + error);
+                })
+            })
+        }
+        
+        function GetAllData(){
+            const dbRef = ref(db);
+            get(child(dbRef, "Produse/" ))
+            .then((snapshot) => {
+                var prod = [];
+                snapshot.forEach(childSnapshot => {
+                    prod.push(childSnapshot);
+                });
+                AddAllItems(prod);
+            })
+            .catch((error) => {
+                console.log("Mesaj eroare " + error);
+            })
+        }
+        window.onload = GetAllData;
+    
+    
+        document.getElementById("send").addEventListener('click', () => {
+            window.location.href = "form_checkout.html";
+        })
+    </script>
+
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="form_home.html">Acasa</a></li>
+                <li><a href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li>
+                <ul class="subnav">
+                    <li><a class="active"><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a class="active" href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li><label id="user-db">-</label></li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a id="signout" href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+
+    <section id="header-banner-cart">
+        <h1><span>#shopwithus</span></h1>
+    </section>
+
+    <section id="cart" class="section-p1">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <td>Sterge</td>
+                    <td>Imagine</td>
+                    <td>Brand</td>
+                    <td>Denumire</td>
+                    <td>Pret</td>
+                    <td>Cantitate</td>
+                    <td>Subtotal</td>
+                    <td>Detalii</td>
+                </tr>
+            </thead>
+            <tbody id="tbody-cart">
+                <!-- cod generat -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="cart-add" class="section-p1">
+        <div></div>
+        <div id="subtotal">
+            <h3>Nota de Plata</h3>
+            <!-- <p>Daca suma depaseste 200 lei transportul este gratuit.</p> -->
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="subtotalPlata">-</td>
+                </tr>
+                <tr>
+                    <td>Transport (poate varia in functie de metoda de expediere)</td>
+                    <td id="transport">19</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td id="totalPlata"><strong>-</strong></td>
+                </tr>
+            </table>
+            <button id="send" class="normal">Finalizare cumparaturi</button>
+        </div>
+    </section>
+
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
