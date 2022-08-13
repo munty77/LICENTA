@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Page</title>
+    <!-- script folosit pentru a putea utiliza incarcarea doar a unei sectiuni din pagina -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="style_home.css">
+    <link rel="stylesheet" href="style_subnav.css">
+    <style>
+        #addButton{
+            display: none;
+        }
+        .isAdmin{
+            display: inline-flex!important;
+            flex-direction: column;
+        }
+        #image-input{
+            float: left;
+            width: 200px;
+        }
+        #image-input2 {
+            overflow: hidden;
+            width: 200px;
+        }
+        
+        #display-image{
+            width: 200px;
+            height: 225px;
+            border: 1px solid black;
+            background-image: url("img/products/haine/no-photo.jpg");
+            background-color: rgb(216, 216, 216);
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            float: left;
+        }
+        #display-image2{
+            width: 200px;
+            height: 225px;
+            border: 1px solid black;
+            background-image: url("img/products/haine/no-photo.jpg");
+            background-color: rgb(216, 216, 216);
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .containerImg{
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transition: .5s ease;
+        }
+
+        .containerImg:hover .overlay {
+            opacity: 1;
+        }
+
+        .btn-primary{
+            background-color: #367976!important;
+            border-color: #367976!important;
+        }
+        .btn-primary:hover{
+            background-color: #295e5b!important;
+            color: white;
+            transition: 0.3s ease;
+        }
+
+        /* dropsown with checkboxes */
+        .dropdown-check-list {
+            display: inline-block;
+        }
+        .dropdown-check-list.colors{
+            float: right;
+        }
+
+        .dropdown-check-list .anchor {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            padding: 5px 50px 5px 10px;
+            border: 1px solid #ccc;
+            height: 20px;/*plus*/
+            word-wrap: normal;
+            width: 300px;
+            padding: 2px 3px;
+        }
+
+        .dropdown-check-list .anchor:after {
+            position: absolute;
+            content: "";
+            border-left: 2px solid black;
+            border-top: 2px solid black;
+            padding: 4px;
+            right: 10px;
+            top: 5%;
+            -moz-transform: rotate(-135deg);
+            -ms-transform: rotate(-135deg);
+            -o-transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+        }
+
+        .dropdown-check-list .anchor:active:after {
+            right: 8px;
+            top: 21%;
+        }
+
+        .dropdown-check-list ul.items {
+            padding: 2px;
+            display: none;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+        .dropdown-check-list ul.items li {
+            list-style: none;
+            text-align: left;
+            padding-left: 0px;
+            padding-top: 5px;
+            width: 300px; /*new*/
+        }
+
+        .dropdown-check-list.visible .anchor {
+            color: #367976;
+        }
+
+        .dropdown-check-list.visible .items {
+            display: table-row;
+        }
+        /*  */
+
+
+        input[type="checkbox"]:checked{
+            accent-color: #367976;
+        }
+        input[type="checkbox"]{
+            margin: 0 5px;
+        }
+
+
+        /* SEARCH BAR */
+
+        .container .input{
+            border: 0;
+            outline: none;
+            color: #8b7d77;
+        }
+
+        .search_wrap{
+            width: 500px;
+            margin: 10px auto;
+        }
+
+        .search_wrap .search_box{
+            position: relative;
+            width: 300px;
+            height: 30px;
+            margin-right: auto !important;
+            margin-left: auto !important;
+        }
+
+        .search_wrap .search_box .input{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            padding: 10px 20px;
+            border-radius: 3px;
+            font-size: 18px;
+        }
+
+        .search_wrap .search_box .btn{
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            background: #367976;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .search_wrap .search_box .btn:hover{
+            background: #295e5b;	
+        }
+
+        .search_wrap .search_box .btn.btn_common .fas{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .search_wrap.search_wrap_1 .search_box .btn{
+            right: 0;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+
+        .search_wrap.search_wrap_1 .search_box .input{
+            padding-right: 80px;
+            box-shadow: 5px 6px 15px grey
+        }
+
+        /*  */
+
+        ::placeholder{
+            color: #bfbcbb;
+            transition: all 0.5s ease;
+        }
+        input:focus::placeholder {
+            color: transparent;
+        }
+
+        /* isAdmin: label-dropdown-textBox */
+        select,
+        .search-query{
+            word-wrap: normal;
+            float: right;
+            width: 300px;
+        }
+        label{
+            float: left;
+            text-align: left;
+        }
+
+        input[type="file"]{
+            width: 300px;
+        }
+        input[type="number"]{
+            width: 90px;
+        }
+
+        #error1, #error2, #error3, #error4{
+            font-size: 16px;
+            color: red;
+        }
+
+
+       
+        /* ------------------------------- */
+    </style>
+</head>
+<body>
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-angle-up"></i></button>
+    <script type="text/javascript" src="scriptTopBtn.js"></script>
+    <section id="header">
+        <a href="form_home.html"><img src="img/home_logo.jpg" class="logo" alt=""></a>
+        <div>
+            <!-- MENIU -->
+            <ul id="navbar">
+                <li><a href="form_home.html">Acasa</a></li>
+                <li><a class="active" href="form_products.html">Produse</a></li>
+                <li><a href="form_about.html">Despre</a></li>
+                <li><a href="form_contact.html">Contact</a></li>
+                <ul class="subnav">
+                    <li><a><i class="fa fa-shopping-bag"></i> <i id="sub-1" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop-1">
+                        <li><i class="fas fa-heart"></i></li>
+                        <li><a href="form_favorite.html">Produse Favorite</a></li>
+                        <li><a href="form_cart.html">Cos cumparaturi</a></li>
+                    </ul>
+                </ul>
+                
+                <ul class="subnav">
+                    <li><a id="signoutlink" class="nav-link"><i class="fas fa-user"></i> <i id="sub" class="fa fa-caret-down"></i></a></li>
+                    <ul id="drop">
+                        <li><label id="user-db">-</label></li>
+                        <li><a href="form_profile.html">Editare Profil</a></li>
+                        <li><a id="signout" href="form_logare.html">Deconectare</a></li>
+                    </ul>
+                </ul>
+                
+                <a href="#" id="close"><i class="fas fa-times-circle"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-bars"></i>
+        </div>
+    </section>
+    <!-- script for responsive menu -->
+    <script src="scriptHome.js"></script>
+    <script src="scriptSubnav.js"></script>
+    
+    <section id="header-banner">
+        <h1><span>#stayhome</span></h1>
+    </section>
+
+    <section id="product1" class="section-p1">
+        <!-- ADAUGAREA PRODUSELOR -->
+        <div id="addButton">
+            <div>
+                <label id="error1"></label><br>
+                <label for="categorieProd">Categorie* </label>
+                <select id="categorieProd" placeholder="Categorie produs">
+                    <option value="" disabled selected>Selecteaza categoria produsului</option>
+                    <option value="rochii">Rochii</option>
+                    <option value="fuste">Fuste</option>
+                    <option value="pantaloni">Pantaloni</option>
+                    <option value="bluze">Bluze</option>
+                    <option value="tricouri">Tricouri</option>
+                    <option value="camasi">Camasi</option>
+                    <option value="geci">Geci</option>
+                </select>
+            </div>
+            <div>
+                <label for="brandProd" class="label">Brand* </label>
+                <select id="brandProd" placeholder="Brand produs">
+                    <option value="" disabled selected>Selecteaza brand-ul produsului</option>
+                    <option value="bershka">Bershka</option>
+                    <option value="pull&bear">Pull&Bear</option>
+                    <option value="h&m">H&M</option>
+                    <option value="stradivarius">Stradivarius</option>
+                    <option value="c&a">C&A</option>
+                    <option value="zara">Zara</option>
+                    <option value="newyorker">New Yorker</option>
+                </select>
+            </div>
+            <div>
+                <label for="nameProd">Nume* </label>
+                <input id="nameProd" type="text" class="search-query" placeholder="Nume produs">
+            </div>
+            <br>
+            <label><strong>Culori* </strong></label><label id="error2"></label>
+            
+            <div>
+                <label for="listNegru">Negru </label>
+                <div id="listNegru" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-negru1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-negru2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-negru" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-negru" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-negru" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-negru" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-negru" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-negru" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listAlb">Alb </label>
+                <div id="listAlb" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-alb1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-alb2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-alb" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-alb" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-alb" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-alb" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-alb" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-alb" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listAlbastru">Albastru </label>
+                <div id="listAlbastru" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-albastru1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-albastru2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-albastru" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-albastru" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-albastru" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-albastru" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-albastru" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-albastru" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listRosu">Rosu </label>
+                <div id="listRosu" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-rosu1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-rosu2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-rosu" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-rosu" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-rosu" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-rosu" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-rosu" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-rosu" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listVerde">Verde </label>
+                <div id="listVerde" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-verde1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-verde2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-verde" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-verde" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-verde" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-verde" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-verde" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-verde" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listMov">Mov </label>
+                <div id="listMov" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-mov1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-mov2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-mov" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-mov" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-mov" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-mov" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-mov" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-mov" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listBej">Bej </label>
+                <div id="listBej" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-bej1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-bej2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-bej" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-bej" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-bej" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-bej" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-bej" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-bej" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <label for="listRoz">Roz </label>
+                <div id="listRoz" class="dropdown-check-list colors" tabindex="100">
+                    <span class="anchor">Marimi/Poze</span>
+                    <ul class="items">
+                        <li><input type="file" title="Poza fata produs" id="image-input-roz1" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="file" title="Poza spate produs" id="image-input-roz2" accept="image/jpeg, image/png, image/jpg"></li>
+                        <li><input type="number" id="nrProdXS-roz" value="0" min="0"/> XS</li>
+                        <li><input type="number" id="nrProdS-roz" value="0" min="0"/> S</li>
+                        <li><input type="number" id="nrProdM-roz" value="0" min="0"/> M</li>
+                        <li><input type="number" id="nrProdL-roz" value="0" min="0"/> L</li>
+                        <li><input type="number" id="nrProdXL-roz" value="0" min="0"/> XL</li>
+                        <li><input type="file" title="Poza culoare produs" id="image-roz" accept="image/jpeg, image/png, image/jpg"></li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <label id="error3"></label>
+            <div>
+                <label for="pretProd">Pret* (lei) </label>
+                <input id="pretProd" type="text" class="search-query" placeholder="Pret produs">
+            </div>
+            <div>
+                <label for="reducereProd">Reducere (%) </label>
+                <input id="reducereProd" type="text" class="search-query" placeholder="Procent reducere produs">
+            </div>
+            <br>
+            <label for="image-input"><strong>Alegeti poze pentru afisare* </strong></label>
+            <label id="error4"></label>
+            <div>
+                <input type="file" id="image-input" accept="image/jpeg, image/png, image/jpg">
+                <input type="file" id="image-input2" accept="image/jpeg, image/png, image/jpg">
+            </div>
+            
+            <div>
+                <div id="display-image"></div>
+                <div id="display-image2"></div>
+            </div>
+
+            <button id="btnAdd" type="button" class="btn btn-primary">Adauga Produs</button>
+        </div>
+
+        <!-- SCRIPT PENTRU VIZUALIZAREA IMAGINII CE VA FI AFISATA PE SITE-->
+        <script>
+            const image_input = document.querySelector("#image-input");
+            
+            image_input.addEventListener("change", function() {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    const uploaded_image = reader.result;
+                    document.querySelector("#display-image").style.backgroundImage = `url(${uploaded_image})`;
+                });
+                reader.readAsDataURL(this.files[0]);
+            });
+
+            const image_input2 = document.querySelector("#image-input2");
+            image_input2.addEventListener("change", function() {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    const uploaded_image = reader.result;
+                    document.querySelector("#display-image2").style.backgroundImage = `url(${uploaded_image})`;
+                });
+                reader.readAsDataURL(this.files[0]);
+            });
+        </script>
+
+        <!-- SEARCH BAR -->
+        <div class="container">
+            <div class="search_wrap search_wrap_1">
+                <div class="search_box">
+                    <input type="text" class="input" placeholder="cautare...">
+                    <div class="btn btn_common">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter products -->
+        <br><br><br>
+        <div id="list1" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Disponibilitate</span>
+            <ul class="items">
+                <li><input type="checkbox" id="checkStoc"/>In stoc </li>
+                <li><input type="checkbox" id="checkPromotii"/>Promotii</li>
+                <li><input type="checkbox" id="checkAll"/>Toate produsele </li>
+            </ul>
+        </div>
+
+        <div id="list2" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Pret</span>
+            <ul class="items">
+                <li><input type="checkbox" />Sub 50 </li>
+                <li><input type="checkbox" />50-100</li>
+                <li><input type="checkbox" />100-200</li>
+                <li><input type="checkbox" />200-300</li>
+                <li><input type="checkbox" />Peste 300</li>
+            </ul>
+        </div>
+
+        <div id="list3" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Brand</span>
+            <ul class="items">
+                <li><input type="checkbox" />Bershka</li>
+                <li><input type="checkbox" />Pull&Bear</li>
+                <li><input type="checkbox" />H&M</li>
+                <li><input type="checkbox" />Stradivarius</li>
+                <li><input type="checkbox" />New Yorker</li>
+                <li><input type="checkbox" />C&A</li>
+                <li><input type="checkbox" />Zara</li>
+                <li><input type="checkbox" />Hervis</li>
+            </ul>
+        </div>
+
+        <div id="list4" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Culoare</span>
+            <ul class="items">
+                <li><input type="checkbox" />Negru</li>
+                <li><input type="checkbox" />Alb</li>
+                <li><input type="checkbox" />Albastru</li>
+                <li><input type="checkbox" />Rosu</li>
+                <li><input type="checkbox" />Verde</li>
+                <li><input type="checkbox" />Mov</li>
+                <li><input type="checkbox" />Bej</li>
+                <li><input type="checkbox" />Roz</li>
+            </ul>
+        </div>
+
+        <div id="list5" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Produse</span>
+            <ul class="items">
+                <li><input type="checkbox" />Rochii</li>
+                <li><input type="checkbox" />Fuste</li>
+                <li><input type="checkbox" />Pantaloni</li>
+                <li><input type="checkbox" />Bluze</li>
+                <li><input type="checkbox" />Tricouri</li>
+                <li><input type="checkbox" />Geci</li>
+                <li><input type="checkbox" />Incaltaminte</li>
+            </ul>
+        </div>
+
+        <div id="list6" class="dropdown-check-list" tabindex="100">
+            <span class="anchor">Marimi</span>
+            <ul class="items">
+                <li><input type="checkbox" />XS</li>
+                <li><input type="checkbox" />S</li>
+                <li><input type="checkbox" />M</li>
+                <li><input type="checkbox" />L</li>
+                <li><input type="checkbox" />XL</li>
+            </ul>
+        </div>
+
+        <!-- SCRIPT PENTRU VIZUALIZAREA OPTIUNILOR DIN DROPDOWN -->
+        <script>
+            var checkList1 = document.getElementById('list1');
+            var checkList2 = document.getElementById('list2');
+            var checkList3 = document.getElementById('list3');
+            var checkList4 = document.getElementById('list4');
+            var checkList5 = document.getElementById('list5');
+            var checkList6 = document.getElementById('list6');
+
+            var listNegru = document.getElementById('listNegru');
+            var listAlb = document.getElementById('listAlb');
+            var listAlbastru = document.getElementById('listAlbastru');
+            var listRosu = document.getElementById('listRosu');
+            var listVerde = document.getElementById('listVerde');
+            var listMov = document.getElementById('listMov');
+            var listBej = document.getElementById('listBej');
+            var listRoz = document.getElementById('listRoz');
+
+
+            listNegru.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listNegru.classList.contains('visible'))
+                    listNegru.classList.remove('visible');
+                else
+                    listNegru.classList.add('visible');
+            }
+
+            listAlb.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listAlb.classList.contains('visible'))
+                    listAlb.classList.remove('visible');
+                else
+                    listAlb.classList.add('visible');
+            }
+
+            listAlbastru.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listAlbastru.classList.contains('visible'))
+                    listAlbastru.classList.remove('visible');
+                else
+                    listAlbastru.classList.add('visible');
+            }
+
+            listRosu.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listRosu.classList.contains('visible'))
+                    listRosu.classList.remove('visible');
+                else
+                    listRosu.classList.add('visible');
+            }
+
+            listVerde.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listVerde.classList.contains('visible'))
+                    listVerde.classList.remove('visible');
+                else
+                    listVerde.classList.add('visible');
+            }
+
+            listMov.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listMov.classList.contains('visible'))
+                    listMov.classList.remove('visible');
+                else
+                    listMov.classList.add('visible');
+            }
+
+            listBej.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listBej.classList.contains('visible'))
+                    listBej.classList.remove('visible');
+                else
+                    listBej.classList.add('visible');
+            }
+
+            listRoz.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (listRoz.classList.contains('visible'))
+                    listRoz.classList.remove('visible');
+                else
+                    listRoz.classList.add('visible');
+            }
+
+            
+
+            checkList1.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList1.classList.contains('visible'))
+                    checkList1.classList.remove('visible');
+                else
+                    checkList1.classList.add('visible');
+            }
+
+            checkList2.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList2.classList.contains('visible'))
+                    checkList2.classList.remove('visible');
+                else
+                    checkList2.classList.add('visible');
+            }
+
+            checkList3.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList3.classList.contains('visible'))
+                    checkList3.classList.remove('visible');
+                else
+                    checkList3.classList.add('visible');
+            }
+
+            checkList4.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList4.classList.contains('visible'))
+                    checkList4.classList.remove('visible');
+                else
+                    checkList4.classList.add('visible');
+            }
+
+            checkList5.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList5.classList.contains('visible'))
+                    checkList5.classList.remove('visible');
+                else
+                    checkList5.classList.add('visible');
+            }
+
+            checkList6.getElementsByClassName('anchor')[0].onclick = function(evt) {
+                if (checkList6.classList.contains('visible'))
+                    checkList6.classList.remove('visible');
+                else
+                    checkList6.classList.add('visible');
+            }
+        </script>
+
+        <br><br><br>
+        <p>New Collection</p>
+
+        <!-- AICI VOR FI GENERATE DINAMIC PRODUSELE -->
+        <div id="divBody" class="pro-container">
+
+        </div>
+    </section>
+
+    <!-- <script>
+        //Get the button
+        var mybutton = document.getElementById("myBtn");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script> -->
+    
+    
+    <!-- SCRIPT PENTRU LUCRUL CU FIREBASE -->
+    <script type = "module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+        import {getDatabase, ref, set, get, child, remove, push, update} from "https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4QbCtMwmAygKrUaubiIHyHzgHTxYRzxs",
+            authDomain: "test-autentificare.firebaseapp.com",
+            databaseURL: "https://test-autentificare-default-rtdb.firebaseio.com",
+            projectId: "test-autentificare",
+            storageBucket: "test-autentificare.appspot.com",
+            messagingSenderId: "297047922567",
+            appId: "1:297047922567:web:1ec8c6da201fe836c56522"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        /////**************************/////
+        // ID-UL USER-ULUI
+        const uid = sessionStorage.getItem("uid");
+        console.log("UID logat:");
+        console.log(uid);
+
+        const db = getDatabase();
+        const dbRef = ref(db);
+
+        var btn = document.getElementById("addButton");
+
+        get(child(dbRef, "Conturi/" + uid)).then((snapshot) => {
+            if (snapshot.exists()) {
+                if(snapshot.val().Rol && snapshot.val().Rol === "admin")
+                {
+                    // DACA UTILIZATORUL ARE ROLUL DE ADMIN, ATUNCI II VA FI VIZIBILA URMATOAREA FUNCTIE:
+                    // ADAUGAREA UNUI PRODUS
+                    console.log("Rolul este:");
+                    console.log(snapshot.val().Rol);
+                    btn.classList.add("isAdmin");
+                }
+                
+                // AFISAREA NUMELUI DE UTILIZATOR SAU IN ALTE CAZURI NUMELE SI PRENUMELE UTILIZATORULUI
+                const displayName = snapshot.val().Nume;
+                console.log("Nume si Prenume:");
+                console.log(displayName);
+                const username =  snapshot.val().Utilizator;
+                console.log("Nume utilizator:");
+                console.log(username);
+                if(username == ''){
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = displayName;
+                }else{
+                    const user_db = document.getElementById('user-db');
+                    user_db.innerHTML = username;
+                }
+            } else {
+                console.log("No data available");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        
+        // FUNCTIE PENTRU DECONECTAREA UTILIZATORULUI
+        document.getElementById("signout").addEventListener('click', () => {
+            signOut(auth)
+            .then(()=>{
+                console.log("Utilizatorul a fost deconectat");
+                window.location.replace("form_login.html");
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        });
+
+        // MESAJ DE EROARE PENTRU VALIDAREA CATEGORIEI BRAND-ULUI SI A NUMELUI
+        var error1 = document.getElementById("error1");
+        // MESAJ DE EROARE PENTRU CULORI
+        var error2 = document.getElementById("error2");
+        // MESAJ DE EROARE PENTRU PRET
+        var error3 = document.getElementById("error3");
+        // MESAJ DE EROARE PENTRU POZELE AFISATE
+        var error4 = document.getElementById("error4");
+        // REGEX 
+        let lettersRegex = /^[a-zA-Z -]*$/;//letter, line and space 
+        let numbersRegex = /^[1-9]+[0-9]*$/;
+
+        // FUNCTII PENTRU VALIDAREA DATELOR DE LA ADAUGAREA UNUI PRODUS NOU
+        // validarea categoriei
+        function validareCategorie(field){
+            if(field.value === ""){
+                error1.innerText = "Selectati categoria produsului";
+                return false;
+            }else{
+                error1.innerText = "";
+                return true;
+            }
+        }
+        // validarea brand-ului
+        function validareBrand(field){
+            if(field.value === ""){
+                error1.innerText = "Selectati brand-ul produsului";
+                return false;
+            }else{
+                error1.innerText = "";
+                return true;
+            }
+        }
+        // validarea numelui
+        function validareNume(field){
+            if(field === ""){
+                error1.innerText = "Completati numele produsului!";
+                return false;
+            }else if(!lettersRegex.test(field)){
+                error1.innerText = "Numele trebuie sa contina doar litere!";
+                return false
+            }else if(!field.trim()){
+                error1.innerText = "Numele nu trebuie sa fie format doar din spatii!";
+                return false;
+            } else{ 
+                error1.innerText = "";
+                return true;
+            }
+        }
+        // validare culori
+        // caz 1: daca o imagine este selectata dar marimea nu, se va afisa un mesaj de eroare
+        function validareCulori1(front, back, xs, s, m, l, xl, color, imgColor){
+            if((xs == 0 && s == 0 && m == 0 && l == 0 && xl == 0) && (front != "" || back != "")){
+                error2.innerText = "Alegeti cel putin o marime pentru culoarea " + color + ".";
+                return false; 
+            }else if((xs > 0 || s > 0 || m > 0 || l > 0 || xl > 0) && ( front != "" || back != "") && imgColor === ""){
+                error2.innerText = "Atasati imaginea pentru culoarea " + color + " a produsului.";
+                return false;
+            }else{
+                error2.innerText = "";
+                return true;
+            }
+                
+        }
+        // caz 2: daca marimea de la o culoare > 0, iar imaginea corespondenta nu este selectata, atunci se va genera un mesaj de eroare   
+        function validareCulori2(front, back, xs, s, m, l, xl, color, imgColor){
+            if((front === "" && back === "") && (xs > 0 || s > 0 || m > 0 || l > 0 || xl > 0)){
+                error2.innerText = "Alegeti cel putin o fotografie pentru culoarea " + color + ".";
+                return false;
+            }else if((xs > 0 || s > 0 || m > 0 || l > 0 || xl > 0) && ( front != "" || back != "") && imgColor === ""){
+                error2.innerText = "Atasati imaginea pentru culoarea fff" + color + " a produsului.";
+                return false;
+            }else{
+                error2.innerText = "";
+                return true;
+            }
+        }
+
+        // validare pret
+        function validarePret(field){
+            if(field === ""){
+                error3.innerText = "Completati pretul produsului!";
+                return false;
+            }else if(!numbersRegex.test(field)){
+                error3.innerText = "Pretul trebuie sa contina doar cifre si sa fie > 0!"
+                return false;
+            }else if(!field.trim()){
+                error3.innerText = "Pretul nu trebuie sa fie format doar din spatii!";
+                return false;
+            }else{
+                error3.innerText = "";
+                return true;
+            }
+        }
+        // validare reducere
+        function validareReducere(field){
+            console.log("REDUCERE: " + field);
+            if(field != 0 && !numbersRegex.test(field)){
+                error3.innerText = "Reducerea trebuie sa contina doar cifre si sa fie > 0!"
+                return false;
+            }else{
+                error3.innerText = "";
+                return true;
+            }
+        }
+
+        // validare imagini pentru afisare
+        function validareFoto(field1, field2){
+            if(field1 === "" && field2 === ""){
+                error4.innerText = "Selectati cel putin o fotografie!";
+                return false;
+            }else{
+                error4.innerText = "";
+                return true;
+            }
+        }
+
+
+
+
+        var lstFav = [];
+        var lstCart = [];
+
+        // EVENIMENT PENTRU BUTONUL DE ADAUGARE A PRODUSELOR DE CATRE UTILIZATORII CU ROL DE ADMIN
+        document.getElementById("btnAdd").addEventListener('click', () => {
+            get(child(dbRef, "Produse/")).then((snapshot) => {
+                
+
+
+                var valCateg = document.getElementById("categorieProd");
+                var categ = valCateg.options[valCateg.selectedIndex].text;
+
+                var valBrand = document.getElementById("brandProd");
+                var brand = valBrand.options[valBrand.selectedIndex].text;
+
+                var nume = document.getElementById("nameProd").value;
+
+                var pret = document.getElementById("pretProd").value;
+                var img = document.getElementById("image-input").value;
+                var img2 = document.getElementById("image-input2").value;
+                //PRODUSE DE CULOARE NEAGRA
+                var xsNegru = document.getElementById("nrProdXS-negru").value;
+                var sNegru = document.getElementById("nrProdS-negru").value;
+                var mNegru = document.getElementById("nrProdM-negru").value;
+                var lNegru = document.getElementById("nrProdL-negru").value;
+                var xlNegru = document.getElementById("nrProdXL-negru").value;
+                var PhotoFrontNegru = document.getElementById("image-input-negru1").value;
+                var PhotoBackNegru = document.getElementById("image-input-negru2").value;
+                var imgNegru = document.getElementById("image-negru").value;
+                PhotoFrontNegru = PhotoFrontNegru.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackNegru = PhotoBackNegru.replace("C:\\fakepath\\", "img/products/haine/");
+                imgNegru = imgNegru.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE ALBA
+                var xsAlb = document.getElementById("nrProdXS-alb").value;
+                var sAlb = document.getElementById("nrProdS-alb").value;
+                var mAlb = document.getElementById("nrProdM-alb").value;
+                var lAlb = document.getElementById("nrProdL-alb").value;
+                var xlAlb = document.getElementById("nrProdXL-alb").value;
+                var PhotoFrontAlb = document.getElementById("image-input-alb1").value;
+                var PhotoBackAlb = document.getElementById("image-input-alb2").value;
+                var imgAlb = document.getElementById("image-alb").value;
+                PhotoFrontAlb = PhotoFrontAlb.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackAlb = PhotoBackAlb.replace("C:\\fakepath\\", "img/products/haine/");
+                imgAlb = imgAlb.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE ALBASTRA
+                var xsAlbastru = document.getElementById("nrProdXS-albastru").value;
+                var sAlbastru = document.getElementById("nrProdS-albastru").value;
+                var mAlbastru = document.getElementById("nrProdM-albastru").value;
+                var lAlbastru = document.getElementById("nrProdL-albastru").value;
+                var xlAlbastru = document.getElementById("nrProdXL-albastru").value;
+                var PhotoFrontAlbastru = document.getElementById("image-input-albastru1").value;
+                var PhotoBackAlbastru = document.getElementById("image-input-albastru2").value;
+                var imgAlbastru = document.getElementById("image-albastru").value;
+                PhotoFrontAlbastru = PhotoFrontAlbastru.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackAlbastru = PhotoBackAlbastru.replace("C:\\fakepath\\", "img/products/haine/");
+                imgAlbastru = imgAlbastru.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE ROSIE
+                var xsRosu = document.getElementById("nrProdXS-rosu").value;
+                var sRosu = document.getElementById("nrProdS-rosu").value;
+                var mRosu = document.getElementById("nrProdM-rosu").value;
+                var lRosu = document.getElementById("nrProdL-rosu").value;
+                var xlRosu = document.getElementById("nrProdXL-rosu").value;
+                var PhotoFrontRosu = document.getElementById("image-input-rosu1").value;
+                var PhotoBackRosu = document.getElementById("image-input-rosu2").value;
+                var imgRosu = document.getElementById("image-rosu").value;
+                PhotoFrontRosu = PhotoFrontRosu.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackRosu = PhotoBackRosu.replace("C:\\fakepath\\", "img/products/haine/");
+                imgRosu = imgRosu.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE VERDE
+                var xsVerde = document.getElementById("nrProdXS-verde").value;
+                var sVerde = document.getElementById("nrProdS-verde").value;
+                var mVerde = document.getElementById("nrProdM-verde").value;
+                var lVerde = document.getElementById("nrProdL-verde").value;
+                var xlVerde = document.getElementById("nrProdXL-verde").value;
+                var PhotoFrontVerde = document.getElementById("image-input-verde1").value;
+                var PhotoBackVerde = document.getElementById("image-input-verde2").value;
+                var imgVerde = document.getElementById("image-verde").value;
+                PhotoFrontVerde = PhotoFrontVerde.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackVerde = PhotoBackVerde.replace("C:\\fakepath\\", "img/products/haine/");
+                imgVerde = imgVerde.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE MOV
+                var xsMov = document.getElementById("nrProdXS-mov").value;
+                var sMov = document.getElementById("nrProdS-mov").value;
+                var mMov = document.getElementById("nrProdM-mov").value;
+                var lMov = document.getElementById("nrProdL-mov").value;
+                var xlMov = document.getElementById("nrProdXL-mov").value;
+                var PhotoFrontMov = document.getElementById("image-input-mov1").value;
+                var PhotoBackMov = document.getElementById("image-input-mov2").value;
+                var imgMov = document.getElementById("image-mov").value;
+                PhotoFrontMov = PhotoFrontMov.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackMov = PhotoBackMov.replace("C:\\fakepath\\", "img/products/haine/");
+                imgMov = imgMov.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE BEJ
+                var xsBej = document.getElementById("nrProdXS-bej").value;
+                var sBej = document.getElementById("nrProdS-bej").value;
+                var mBej = document.getElementById("nrProdM-bej").value;
+                var lBej = document.getElementById("nrProdL-bej").value;
+                var xlBej = document.getElementById("nrProdXL-bej").value;
+                var PhotoFrontBej = document.getElementById("image-input-bej1").value;
+                var PhotoBackBej = document.getElementById("image-input-bej2").value;
+                var imgBej = document.getElementById("image-bej").value;
+                PhotoFrontBej = PhotoFrontBej.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackBej = PhotoBackBej.replace("C:\\fakepath\\", "img/products/haine/");
+                imgBej = imgBej.replace("C:\\fakepath\\", "img/products/haine/");
+                // PRODUSE DE CULOARE ROZ
+                var xsRoz = document.getElementById("nrProdXS-roz").value;
+                var sRoz = document.getElementById("nrProdS-roz").value;
+                var mRoz = document.getElementById("nrProdM-roz").value;
+                var lRoz = document.getElementById("nrProdL-roz").value;
+                var xlRoz = document.getElementById("nrProdXL-roz").value;
+                var PhotoFrontRoz = document.getElementById("image-input-roz1").value;
+                var PhotoBackRoz = document.getElementById("image-input-roz2").value;
+                var imgRoz = document.getElementById("image-roz").value;
+                PhotoFrontRoz = PhotoFrontRoz.replace("C:\\fakepath\\", "img/products/haine/");
+                PhotoBackRoz = PhotoBackRoz.replace("C:\\fakepath\\", "img/products/haine/");
+                imgRoz = imgRoz.replace("C:\\fakepath\\", "img/products/haine/");
+                // CALCULAREA NR DE PRODUSE(STOC)
+                var stoc;
+                var stocNegru = parseInt(xsNegru) + parseInt(sNegru) + parseInt(mNegru) + parseInt(lNegru) + parseInt(xlNegru);
+                var stocAlb = parseInt(xsAlb) + parseInt(sAlb) + parseInt(mAlb) + parseInt(lAlb) + parseInt(xlAlb);
+                var stocAlbastru = parseInt(xsAlbastru) + parseInt(sAlbastru) + parseInt(mAlbastru) + parseInt(lAlbastru) + parseInt(xlAlbastru);
+                var stocRosu = parseInt(xsRosu) + parseInt(sRosu) + parseInt(mRosu) + parseInt(lRosu) + parseInt(xlRosu);
+                var stocVerde = parseInt(xsVerde) + parseInt(sVerde) + parseInt(mVerde) + parseInt(lVerde) + parseInt(xlVerde);
+                var stocMov = parseInt(xsMov) + parseInt(sMov) + parseInt(mMov) + parseInt(lMov) + parseInt(xlMov);
+                var stocBej = parseInt(xsBej) + parseInt(sBej) + parseInt(mBej) + parseInt(lBej) + parseInt(xlBej);
+                var stocRoz = parseInt(xsRoz) + parseInt(sRoz) + parseInt(mRoz) + parseInt(lRoz) + parseInt(xlRoz);
+                stoc = parseInt(stocNegru) + parseInt(stocAlb) + parseInt(stocAlbastru) + parseInt(stocRosu) + parseInt(stocVerde) + parseInt(stocMov) + parseInt(stocBej) + parseInt(stocRoz);
+                var reducere = document.getElementById("reducereProd").value;
+                if (reducere.length == 0){
+                    reducere = "0";
+                }
+
+                img = img.replace("C:\\fakepath\\", "img/products/haine/");
+                img2 = img2.replace("C:\\fakepath\\", "img/products/haine/");
+                
+               
+                // VALIDAREA CAMPURILOR 
+                if(validareCategorie(valCateg) == false || validareBrand(valBrand) == false || validareNume(nume) == false ||
+                   validareCulori1(PhotoFrontNegru, PhotoBackNegru, xsNegru, sNegru, mNegru, lNegru, xlNegru, "neagra", imgNegru) == false ||
+                   validareCulori1(PhotoFrontAlb, PhotoBackAlb, xsAlb, sAlb, mAlb, lAlb, xlAlb, "alba", imgAlb) == false ||
+                   validareCulori1(PhotoFrontAlbastru, PhotoBackAlbastru, xsAlbastru, sAlbastru, mAlbastru, lAlbastru, xlAlbastru, "albastra", imgAlbastru) == false ||
+                   validareCulori1(PhotoFrontRosu, PhotoBackRosu, xsRosu, sRosu, mRosu, lRosu, xlRosu, "rosie", imgRosu) == false ||
+                   validareCulori1(PhotoFrontVerde, PhotoBackVerde, xsVerde, sVerde, mVerde, lVerde, xlVerde, "verde", imgVerde) == false ||
+                   validareCulori1(PhotoFrontMov, PhotoBackMov, xsMov, sMov, mMov, lMov, xlMov, "mov", imgMov) == false ||
+                   validareCulori1(PhotoFrontBej, PhotoBackBej, xsBej, sBej, mBej, lBej, xlBej, "bej", imgBej) == false || 
+                   validareCulori1(PhotoFrontRoz, PhotoBackRoz, xsRoz, sRoz, mRoz, lRoz, xlRoz, "roz", imgRoz) == false ||
+                   validareCulori2(PhotoFrontNegru, PhotoBackNegru, xsNegru, sNegru, mNegru, lNegru, xlNegru, "neagra", imgNegru) == false ||
+                   validareCulori2(PhotoFrontAlb, PhotoBackAlb, xsAlb, sAlb, mAlb, lAlb, xlAlb, "alba", imgAlb) == false ||
+                   validareCulori2(PhotoFrontAlbastru, PhotoBackAlbastru, xsAlbastru, sAlbastru, mAlbastru, lAlbastru, xlAlbastru, "albastra", imgAlbastru) == false ||
+                   validareCulori2(PhotoFrontRosu, PhotoBackRosu, xsRosu, sRosu, mRosu, lRosu, xlRosu, "rosie", imgRosu) == false ||
+                   validareCulori2(PhotoFrontVerde, PhotoBackVerde, xsVerde, sVerde, mVerde, lVerde, xlVerde, "verde", imgVerde) == false ||
+                   validareCulori2(PhotoFrontMov, PhotoBackMov, xsMov, sMov, mMov, lMov, xlMov, "mov", imgMov) == false ||
+                   validareCulori2(PhotoFrontBej, PhotoBackBej, xsBej, sBej, mBej, lBej, xlBej, "bej", imgBej) == false || 
+                   validareCulori2(PhotoFrontRoz, PhotoBackRoz, xsRoz, sRoz, mRoz, lRoz, xlRoz, "roz", imgRoz) == false ||
+                   validarePret(pret) == false || validareReducere(reducere) == false || validareFoto(img, img2) == false){
+                    console.log("DATE INVALIDE PENTRU A ADAUGA PRODUSUL!");
+                }else{
+                    // STOCAREA DATELOR IN BAZA DE DATE
+                    push(ref(db, "Produse/"),{
+                        FavoriteBy: lstFav,
+                        Categorie: categ,
+                        Nume: nume,
+                        Brand: brand,
+                        Pret: pret,
+                        Poza: img,
+                        Poza2: img2,
+                        BoughtBy: lstCart,
+                        Culori: {
+                            "Negru": {
+                                "PozaCuloare": imgNegru,
+                                "PozaFata": PhotoFrontNegru,
+                                "PozaSpate": PhotoBackNegru,
+                                "Marimi": {
+                                    "xs": xsNegru,
+                                    "s": sNegru,
+                                    "m": mNegru,
+                                    "l": lNegru,
+                                    "xl": xlNegru
+                                }
+                            },
+                            "Alb": {
+                                "PozaCuloare": imgAlb,
+                                "PozaFata": PhotoFrontAlb,
+                                "PozaSpate": PhotoBackAlb,
+                                "Marimi": {
+                                    "xs": xsAlb,
+                                    "s": sAlb,
+                                    "m": mAlb,
+                                    "l": lAlb,
+                                    "xl": xlAlb
+                                }
+                            },
+                            "Albastru": {
+                                "PozaCuloare": imgAlbastru,
+                                "PozaFata": PhotoFrontAlbastru,
+                                "PozaSpate": PhotoBackAlbastru,
+                                "Marimi": {
+                                    "xs": xsAlbastru,
+                                    "s": sAlbastru,
+                                    "m": mAlbastru,
+                                    "l": lAlbastru,
+                                    "xl": xlAlbastru
+                                }
+                            },
+                            "Rosu": {
+                                "PozaCuloare": imgRosu,
+                                "PozaFata": PhotoFrontRosu,
+                                "PozaSpate": PhotoBackRosu,
+                                "Marimi": {
+                                    "xs": xsRosu,
+                                    "s": sRosu,
+                                    "m": mRosu,
+                                    "l": lRosu,
+                                    "xl": xlRosu
+                                }
+                            },
+                            "Verde": {
+                                "PozaCuloare": imgVerde,
+                                "PozaFata": PhotoFrontVerde,
+                                "PozaSpate": PhotoBackVerde,
+                                "Marimi": {
+                                    "xs": xsVerde,
+                                    "s": sVerde,
+                                    "m": mVerde,
+                                    "l": lVerde,
+                                    "xl": xlVerde
+                                }
+                            },
+                            "Mov": {
+                                "PozaCuloare": imgMov,
+                                "PozaFata": PhotoFrontMov,
+                                "PozaSpate": PhotoBackMov,
+                                "Marimi": {
+                                    "xs": xsMov,
+                                    "s": sMov,
+                                    "m": mMov,
+                                    "l": lMov,
+                                    "xl": xlMov
+                                }
+                            },
+                            "Bej": {
+                                "PozaCuloare": imgBej,
+                                "PozaFata": PhotoFrontBej,
+                                "PozaSpate": PhotoBackBej,
+                                "Marimi": {
+                                    "xs": xsBej,
+                                    "s": sBej,
+                                    "m": mBej,
+                                    "l": lBej,
+                                    "xl": xlBej
+                                }
+                            },
+                            "Roz": {
+                                "PozaCuloare": imgRoz,
+                                "PozaFata": PhotoFrontRoz,
+                                "PozaSpate": PhotoBackRoz,
+                                "Marimi": {
+                                    "xs": xsRoz,
+                                    "s": sRoz,
+                                    "m": mRoz,
+                                    "l": lRoz,
+                                    "xl": xlRoz
+                                }
+                            }
+                        },
+                        Stoc: stoc,
+                        Reducere: reducere
+                    })
+                    .then(response => {
+                        console.log("Id produs:");
+                        console.log(response.key);
+                        alert("Produsul a fost adaugat cu succes!");
+
+                        window.location.reload(true);
+                    })
+                    .catch((error) => {
+                        alert("Eroare: " + error);
+                    })
+                }
+            });
+        });
+
+        async function returnAsyncKey(key){
+            return new Promise  (resolve => {
+                resolve(key);
+            })
+        }
+
+        let lstProd = [];
+        
+        // FUNCTII PENTRU FILTRAREA PRODUSELOR
+        function SetFilter(Produse){
+            divBody.innerHTML = "";
+            console.log("LISTA DE PRODUSE: ---- " + lstProd);
+            Produse.forEach(element => {
+                // console.log("LISTA DE PRODUSE: ---- " + lstProd);
+// ***************************************
+
+                if(document.getElementById('checkStoc').checked){
+                    if(element.val().Stoc == "0"){
+
+                        console.log("NU EXISTA IN STOC");
+                        let idxStoc = lstProd.indexOf(element.key);
+                        lstProd.splice(idxStoc, 1);
+                        console.log("LISTA DE PRODUSE DUPA STERGERE: ---- " + lstProd);
+
+                    }else if(lstProd.includes(element.key) ){
+
+                        console.log("PRODUSUL ESTE IN LISTA");
+                        let idxStoc = lstProd.indexOf(element.key);
+                        lstProd.splice(idxStoc, 1);
+                        console.log("LISTA DE PRODUSE DUPA STERGERE: ---- " + lstProd);
+                        AddItem(element.key, element.val().Brand, element.val().Poza, element.val().Poza2, element.val().Nume, element.val().Pret, element.val().Reducere, element.val().FavoriteBy);
+                    }
+                    console.log("### LISTA FINALA DE PRODUSE: " + lstProd);
+                }else{
+                    GetAllData();
+                }
+
+                if(document.getElementById('checkPromotii').checked){
+                    if(element.val().Reducere == "0" || element.val().Stoc == "0"){
+
+                        console.log("PRODUSUL NU ESTE REDUS SAU NU ESTE DISPONIBIL");
+                        let idxPromotii = lstProd.indexOf(element.key);
+                        lstProd.splice(idxPromotii, 1);
+                        // console.log("LISTA DE PRODUSE DUPA STERGERE: ---- " + lstProd);
+
+                    }else if(lstProd.includes(element.key)){
+                           
+                        console.log("PRODUSUL ESTE IN LISTA");
+                        let idxPromotii = lstProd.indexOf(element.key);
+                        lstProd.splice(idxPromotii, 1);
+                        // console.log("LISTA DE PRODUSE DUPA STERGERE: ---- " + lstProd);
+                        AddItem(element.key, element.val().Brand, element.val().Poza, element.val().Poza2, element.val().Nume, element.val().Pret, element.val().Reducere, element.val().FavoriteBy);
+                    }
+                    console.log("### LISTA FINALA DE PRODUSE: " + lstProd);
+                }else{
+                    GetAllData();
+                }
+
+                if(document.getElementById('checkAll').checked){
+                    if(lstProd.includes(element.key)){
+                        console.log("PRODUSUL ESTE IN LISTA");
+                        AddItem(element.key, element.val().Brand, element.val().Poza, element.val().Poza2, element.val().Nume, element.val().Pret, element.val().Reducere, element.val().FavoriteBy);
+                    }                
+                }else{
+                    GetAllData();
+                }
+            })
+        }
+
+        function GetFilter(){
+            const dbRef = ref(db);
+            get(child(dbRef, "Produse/" ))
+            .then((snapshot) => {
+                var prod = [];
+                snapshot.forEach(childSnapshot => {
+                    console.log("Child -> id-urile produselor:");
+                    console.log(childSnapshot.key);
+                    prod.push(childSnapshot);
+                });
+                SetFilter(prod);
+            })
+            .catch((error) => {
+                console.log("Mesaj eroare " + error);
+            })
+        }
+       
+
+        document.getElementById("checkStoc").addEventListener('change', (event) => {
+           GetFilter();
+           $('#divBody').load(document.URL +  '  #divBody');
+           window.onload = GetFilter;
+        })
+
+        document.getElementById("checkPromotii").addEventListener('change', (event) => {
+           GetFilter();
+           $('#divBody').load(document.URL +  '  #divBody');
+           window.onload = GetFilter;
+        })
+
+        document.getElementById("checkAll").addEventListener('change', (event) => {
+           GetFilter();
+           $('#divBody').load(document.URL +  '  #divBody');
+           window.onload = GetFilter;
+        })
+
+
+
+
+        var divBody = document.getElementById('divBody');
+        var count = 0;
+        var countProd = 1;
+        let prodMap = new Map();
+        let prodCart = new Map();
+        
+        // FUNCTII PENTRU GENERAREA DINAMICA A PRODUSELOR PE SITE
+        // key        -> cheia produsului 
+        // favoriteBy -> uid-ul persoanei care a adaugat acest produs la favorite
+        // boughtBy   -> uid-ul persoanei care a adaugat acest produs in cosul de cumparaturi
+        function AddItem(key, brand, imagine1, imagine2, nume, pret, reducere, favoriteBy, boughtBy){
+            //  LISTA CU CHEILE PRODUSELOR  
+            lstProd.push(key);
+           
+           
+           
+           
+            let div = document.createElement('div');
+            div.className = "pro";
+                // BUTON PENTRU ADAUGAREA PRODUSELOR LA FAVORITE
+                let td1 = document.createElement('a');
+                    td1.id = "love" + count;
+                    td1.className = "love";
+                    td1.innerHTML = '<i class="fas fa-heart heart"></i>';
+                    td1.children[0].classList.add("inactiveHeart");
+                // BUTON DE EDITARE PRODUS PENTRU UTILIZATORII CU ROL DE ADMIN
+                let tdEdit = document.createElement('a');
+                    tdEdit.id = "edit" + key;
+                    tdEdit.innerHTML = '<i class="fas fa-pen"></i>';
+                    tdEdit.classList.add("pen");
+                // BUTON DE STERGERE PRODUS PENTRU UTILIZATORII CU ROL DE ADMIN
+                let tdDelete = document.createElement('a');
+                    tdDelete.id = "delete" + key;
+                    tdDelete.innerHTML = '<i class="fas fa-trash"></i>';
+                    tdDelete.classList.add("trash");
+                // SECTIUNEA PENTRU IMAGINEA PRODUSULUI
+                let divImg = document.createElement('div');
+                    divImg.className = "containerImg";
+                let divPhoto = document.createElement('div');
+                    divPhoto.className = "overlay";
+                let td2 = document.createElement('img');
+                let td2i = document.createElement('img');
+                    td2.src = imagine1;
+                    td2i.src = imagine2;
+                // SECTIUNEA PENTRU BRAND-UL PRODUSULUI
+                let td3 = document.createElement('span');
+                    td3.className = "des";
+                    td3.innerHTML = brand;
+                // SECTIUNEA PENTRU NUMELE PRODUSULUI
+                let td4 = document.createElement('h5');
+                    td4.className = "des";
+                    td4.innerHTML = nume;
+                // BUTOANE PENTRU SELECTAREA CULORII PRODUSULUI
+                let divColor = document.createElement('div');
+                    divColor.id = "color" + key;
+                    divColor.className = "btnColor";
+                    // CULOARE - NEGRU
+                    let blackColor = document.createElement('button');
+                        blackColor.title = "Culoare neagra";
+                        blackColor.id = "black" + key;
+                        blackColor.innerHTML = "";
+                    // CULOARE - ALB
+                    let whiteColor = document.createElement('button');
+                        whiteColor.title = "Culoare alba";
+                        whiteColor.id = "white" + key;
+                        whiteColor.innerHTML = "";
+                    // CULOARE - ALBASTRU
+                    let blueColor = document.createElement('button');
+                        blueColor.title = "Culoare albastra";
+                        blueColor.id = "blue" + key;
+                        blueColor.innerHTML = "";
+                    // CULOARE - ROSU
+                    let redColor = document.createElement('button');
+                        redColor.title = "Culoare rosie";
+                        redColor.id = "red" + key;
+                        redColor.innerHTML = "";
+                    // CULOARE - VERDE
+                    let greenColor = document.createElement('button');
+                        greenColor.title = "Culoare verde";
+                        greenColor.id = "green" + key;
+                        greenColor.innerHTML = "";
+                    // CULOARE - MOV
+                    let purpleColor = document.createElement('button');
+                        purpleColor.title = "Culoare mov";
+                        purpleColor.id = "purple" + key;
+                        purpleColor.innerHTML = "";
+                    // CULOARE - BEJ
+                    let beigeColor = document.createElement('button');
+                        beigeColor.title = "Culoare bej";
+                        beigeColor.id = "beige" + key;
+                        beigeColor.innerHTML = "";
+                    // CULOARE - ROZ
+                    let pinkColor = document.createElement('button');
+                        pinkColor.title = "Culoare roz";
+                        pinkColor.id = "pink" + key;
+                        pinkColor.innerHTML = "";
+                // BUTOANE PENTRU SELECTAREA MARIMII PRODUSULUI
+                let divSize = document.createElement('div');
+                    divSize.id = "size" + key;
+                    divSize.className = "btnSize";
+                    // MarimiA XS
+                    let xsSize = document.createElement('button');
+                        xsSize.title = "Marimea XS";
+                        xsSize.id = "size" + key;
+                        xsSize.innerHTML = "XS";
+                    // MarimiA S
+                    let sSize = document.createElement('button');
+                        sSize.title = "Marimea S";
+                        sSize.id = "size" + key;
+                        sSize.innerHTML = "S";
+                    // MarimiA M
+                    let mSize = document.createElement('button');
+                        mSize.title = "Marimea M";
+                        mSize.id = "size" + key;
+                        mSize.innerHTML = "M";
+                    // MarimiA L
+                    let lSize = document.createElement('button');
+                        lSize.title = "Marimea L";
+                        lSize.id = "size" + key;
+                        lSize.innerHTML = "L";
+                    // MarimiA XL
+                    let xlSize = document.createElement('button');
+                        xlSize.title = "Marimea XL";
+                        xlSize.id = "size" + key;
+                        xlSize.innerHTML = "XL";
+                // SECTIUNEA PENTRU PRETUL PRODUSULUI
+                let td5 = document.createElement('h4');
+                    td5.id = "pret" + key;
+                    td5.className = "des";
+                    td5.innerHTML = pret + ' lei';
+                // BUTON PENTRU ADAUGAREA PRODUSULUI IN COSUL DE CUMPARATURI 
+                let td6 = document.createElement('a');
+                    td6.id = "cos" + count;
+                    td6.innerHTML = '<i class="fa fa-shopping-cart cart"></i>';
+            
+            
+            get(child(dbRef, "Produse/" + key)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // AFISAREA BUTOANELOR CORESPONDENTE CULORILOR EXISTENTE
+                    // BLACK 
+                    var negru1 = snapshot.val().Culori.Negru.PozaFata;
+                    var negru2 = snapshot.val().Culori.Negru.PozaSpate;
+                    var imgBlack = snapshot.val().Culori.Negru.PozaCuloare;
+                    if(negru1.length != 0 || negru2.length != 0){
+                        blackColor.className = "colorChange";
+                        blackColor.style.backgroundImage = 'url("' + imgBlack + '")';
+                        blackColor.style.visibility = "visible";
+                    }else{
+                        blackColor.style.visibility = "hidden";
+                    }
+                    // WHITE 
+                    var alb1 = snapshot.val().Culori.Alb.PozaFata;
+                    var alb2 = snapshot.val().Culori.Alb.PozaSpate;
+                    var imgWhite = snapshot.val().Culori.Alb.PozaCuloare;
+                    if(alb1.length != 0 || alb2.length != 0){
+                        whiteColor.className = "colorChange";
+                        whiteColor.style.backgroundImage = 'url("' + imgWhite + '")';
+                        whiteColor.style.visibility = "visible";
+                    }else{
+                        whiteColor.style.visibility = "hidden";
+                    }
+                    // BLUE 
+                    var albastru1 = snapshot.val().Culori.Albastru.PozaFata;
+                    var albastru2 = snapshot.val().Culori.Albastru.PozaSpate;
+                    var imgBlue = snapshot.val().Culori.Albastru.PozaCuloare;
+                    if(albastru1.length != 0 || albastru2.length != 0){
+                        blueColor.className = "colorChange";
+                        blueColor.style.backgroundImage = 'url("' + imgBlue + '")';
+                        blueColor.style.visibility = "visible";
+                    }else{
+                        blueColor.style.visibility = "hidden";
+                    }
+                    // RED 
+                    var rosu1 = snapshot.val().Culori.Rosu.PozaFata;
+                    var rosu2 = snapshot.val().Culori.Rosu.PozaSpate;
+                    var imgRed = snapshot.val().Culori.Rosu.PozaCuloare;
+                    if(rosu1.length != 0 || rosu2.length != 0){
+                        redColor.className = "colorChange";
+                        redColor.style.backgroundImage = 'url("' + imgRed + '")';
+                        redColor.style.visibility = "visible";
+                    }else{
+                        redColor.style.visibility = "hidden";
+                    }
+                    // GREEN 
+                    var verde1 = snapshot.val().Culori.Verde.PozaFata;
+                    var verde2 = snapshot.val().Culori.Verde.PozaSpate;
+                    var imgGreen = snapshot.val().Culori.Verde.PozaCuloare;
+                    if(verde1.length != 0 || verde2.length != 0){
+                        greenColor.className = "colorChange";
+                        greenColor.style.backgroundImage = 'url("' + imgGreen + '")';
+                        greenColor.style.visibility = "visible";
+                    }else{
+                        greenColor.style.visibility = "hidden";
+                    }
+                    // PURPLE 
+                    var mov1 = snapshot.val().Culori.Mov.PozaFata;
+                    var mov2 = snapshot.val().Culori.Mov.PozaSpate;
+                    var imgPurple = snapshot.val().Culori.Mov.PozaCuloare;
+                    if(mov1.length != 0 || mov2.length != 0){
+                        purpleColor.className = "colorChange";
+                        purpleColor.style.backgroundImage = 'url("' + imgPurple + '")';
+                        purpleColor.style.visibility = "visible";
+                    }else{
+                        purpleColor.style.visibility = "hidden";
+                    }
+                    // BEIGE 
+                    var bej1 = snapshot.val().Culori.Bej.PozaFata;
+                    var bej2 = snapshot.val().Culori.Bej.PozaSpate;
+                    var imgBeige = snapshot.val().Culori.Bej.PozaCuloare;
+                    if(bej1.length != 0 || bej2.length != 0){
+                        beigeColor.className = "colorChange";
+                        beigeColor.style.backgroundImage = 'url("' + imgBeige + '")';
+                        beigeColor.style.visibility = "visible";
+                    }else{
+                        beigeColor.style.visibility = "hidden";
+                    }
+                    // PINK 
+                    var roz1 = snapshot.val().Culori.Roz.PozaFata;
+                    var roz2 = snapshot.val().Culori.Roz.PozaSpate;
+                    var imgPink = snapshot.val().Culori.Roz.PozaCuloare;
+                    if(roz1.length != 0 || roz2.length != 0){
+                        pinkColor.className = "colorChange";
+                        pinkColor.style.backgroundImage = 'url("' + imgPink + '")';
+                        pinkColor.style.visibility = "visible";
+                    }else{
+                        pinkColor.style.visibility = "hidden";
+                    }
+
+
+                    // AFISAREA BUTOANELOR CORESPONDENTE CULORILOR EXISTENTE
+                    // XS 
+                    var negruXS = snapshot.val().Culori.Negru.Marimi.xs;
+                    var albXS = snapshot.val().Culori.Alb.Marimi.xs;
+                    var albastruXS = snapshot.val().Culori.Albastru.Marimi.xs;
+                    var rosuXS = snapshot.val().Culori.Rosu.Marimi.xs;
+                    var verdeXS = snapshot.val().Culori.Verde.Marimi.xs;
+                    var movXS = snapshot.val().Culori.Mov.Marimi.xs;
+                    var bejXS = snapshot.val().Culori.Bej.Marimi.xs;
+                    var rozXS = snapshot.val().Culori.Roz.Marimi.xs;
+                    if(negruXS != 0 || albXS != 0 || albastruXS != 0 || rosuXS != 0 || verdeXS != 0 || movXS != 0 || bejXS != 0 || rozXS != 0){
+                        xsSize.className = "sizeChange-xs";
+                        xsSize.style.visibility = "visible";
+                    }else{
+                        xsSize.style.visibility = "hidden";
+                    }
+                    // S 
+                    var negruS = snapshot.val().Culori.Negru.Marimi.s;
+                    var albS = snapshot.val().Culori.Alb.Marimi.s;
+                    var albastruS = snapshot.val().Culori.Albastru.Marimi.s;
+                    var rosuS = snapshot.val().Culori.Rosu.Marimi.s;
+                    var verdeS = snapshot.val().Culori.Verde.Marimi.s;
+                    var movS = snapshot.val().Culori.Mov.Marimi.s;
+                    var bejS = snapshot.val().Culori.Bej.Marimi.s;
+                    var rozS = snapshot.val().Culori.Roz.Marimi.s;
+                    if(negruS != 0 || albS != 0 || albastruS != 0 || rosuS != 0 || verdeS != 0 || movS != 0 || bejS != 0 || rozS != 0){
+                        sSize.className = "sizeChange-s";
+                        sSize.style.visibility = "visible";
+                    }else{
+                        sSize.style.visibility = "hidden";
+                    }
+                    // M 
+                    var negruM = snapshot.val().Culori.Negru.Marimi.m;
+                    var albM = snapshot.val().Culori.Alb.Marimi.m;
+                    var albastruM = snapshot.val().Culori.Albastru.Marimi.m;
+                    var rosuM = snapshot.val().Culori.Rosu.Marimi.m;
+                    var verdeM = snapshot.val().Culori.Verde.Marimi.m;
+                    var movM = snapshot.val().Culori.Mov.Marimi.m;
+                    var bejM = snapshot.val().Culori.Bej.Marimi.m;
+                    var rozM = snapshot.val().Culori.Roz.Marimi.m;
+                    if(negruM != 0 || albM != 0 || albastruM != 0 || rosuM != 0 || verdeM != 0 || movM != 0 || bejM != 0 || rozM != 0){
+                        mSize.className = "sizeChange-m";
+                        mSize.style.visibility = "visible";
+                    }else{
+                        mSize.style.visibility = "hidden";
+                    }
+                    // L 
+                    var negruL = snapshot.val().Culori.Negru.Marimi.l;
+                    var albL = snapshot.val().Culori.Alb.Marimi.l;
+                    var albastruL = snapshot.val().Culori.Albastru.Marimi.l;
+                    var rosuL = snapshot.val().Culori.Rosu.Marimi.l;
+                    var verdeL = snapshot.val().Culori.Verde.Marimi.l;
+                    var movL = snapshot.val().Culori.Mov.Marimi.l;
+                    var bejL = snapshot.val().Culori.Bej.Marimi.l;
+                    var rozL = snapshot.val().Culori.Roz.Marimi.l;
+                    if(negruL != 0 || albL != 0 || albastruL != 0 || rosuL != 0 || verdeL != 0 || movL != 0 || bejL != 0 || rozL != 0){
+                        lSize.className = "sizeChange-l";
+                        lSize.style.visibility = "visible";
+                    }else{
+                        lSize.style.visibility = "hidden";
+                    }
+                    // XL 
+                    var negruXL = snapshot.val().Culori.Negru.Marimi.xl;
+                    var albXL = snapshot.val().Culori.Alb.Marimi.xl;
+                    var albastruXL = snapshot.val().Culori.Albastru.Marimi.xl;
+                    var rosuXL = snapshot.val().Culori.Rosu.Marimi.xl;
+                    var verdeXL = snapshot.val().Culori.Verde.Marimi.xl;
+                    var movXL = snapshot.val().Culori.Mov.Marimi.xl;
+                    var bejXL = snapshot.val().Culori.Bej.Marimi.xl;
+                    var rozXL = snapshot.val().Culori.Roz.Marimi.xl;
+                    if(negruXL != 0 || albXL != 0 || albastruXL != 0 || rosuXL != 0 || verdeXL != 0 || movXL != 0 || bejXL != 0 || rozXL != 0){
+                        xlSize.className = "sizeChange-xl";
+                        xlSize.style.visibility = "visible";
+                    }else{
+                        xlSize.style.visibility = "hidden";
+                    }
+
+
+                    // APLICAREA REDUCERII
+                    var price = document.getElementById("pret" + key);
+                    var size = document.getElementById("size" + key);
+                    if(snapshot.val().Stoc == "0"){
+                        size.innerHTML = "<strong style='float: left;'>Produs indisponibil</strong>";
+                        size.style.color = "#e41616";
+ 
+                        price.innerHTML = " ";
+                    }
+
+                    if(snapshot.val().Reducere != "0" && snapshot.val().Stoc != "0")
+                    {
+                        console.log("PRET VECHI: " + pret);
+
+                        var reducerePret = parseFloat(reducere/100*pret).toFixed(2);
+                        console.log("REDUCERE: " + reducerePret);
+
+                        var pretNou = pret - reducerePret;
+                        console.log("PRET REDUS:" + pretNou);
+                        
+                        price.innerHTML = '<del>' + pret + " lei" + '</del>' + " " + '<strong style="color:#e41616;">' + pretNou + " lei</strong>";  
+                    }
+                    
+                    
+                }
+            })
+           
+            divImg.appendChild(td2);
+            divPhoto.appendChild(td2i);
+            divImg.appendChild(divPhoto);
+            divColor.appendChild(blackColor);
+            divColor.appendChild(whiteColor);
+            divColor.appendChild(blueColor);
+            divColor.appendChild(redColor);
+            divColor.appendChild(greenColor);
+            divColor.appendChild(purpleColor);
+            divColor.appendChild(beigeColor);
+            divColor.appendChild(pinkColor);
+            divSize.appendChild(xsSize);
+            divSize.appendChild(sSize);
+            divSize.appendChild(mSize);
+            divSize.appendChild(lSize);
+            divSize.appendChild(xlSize);
+
+            // BUTON - ADAUGARE PRODUSE LA FAVORITE
+            div.appendChild(td1);
+            div.appendChild(tdEdit);
+            div.appendChild(tdDelete);
+            div.appendChild(divImg);
+            // SECTIUNE BRAND PRODUS
+            div.appendChild(td3);
+            // SECTIUNE NUME PRODUS
+            div.appendChild(td4);
+            div.appendChild(divColor);
+            div.appendChild(divSize);
+            // SECTIUNE PRET PRODUS
+            div.appendChild(td5);
+            // BUTON - ADAUGARE PRODUSE IN COSUL DE CUMPARATURI
+            div.appendChild(td6);
+
+            divBody.appendChild(div);
+
+            var btnEdit = document.getElementById("edit" + key);
+            var btnDelete = document.getElementById("delete" + key);
+ 
+            get(child(dbRef, "Conturi/" + uid)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    if(snapshot.val().Rol && snapshot.val().Rol === "admin")
+                    {
+                        // DACA UTILIZATORUL ARE ROLUL DE ADMIN, ATUNCI II VOR FI VIZIBILE URMATOARELE FUNCTII:
+                        // EDITAREA SI STERGEREA UNUI PRODUS
+                        console.log("Rolul este:");
+                        console.log(snapshot.val().Rol);
+                       
+                        btnEdit.classList.add("pen-admin");
+                        btnDelete.classList.add("trash-admin");
+                    }
+                }
+            })
+
+
+            // document.getElementById("cos").addEventListener('click', () => {
+            //     var confirmAction = confirm("Sunteti sigur ca doriti sa adaugati produsul in cosul de cumparaturi?");
+            //     var confirmAction2 = confirm("Doriti sa vizualizati cosul de cumparaturi?");
+            //     // if (confirmAction) {
+            //     //     set(ref(db, "Conturi/" + uid + "/CosCumparaturi" + "/prod-cos1"),{
+            //     //         Imagine: document.getElementById("prod1").src,
+            //     //         Denumire: document.getElementById("den1").innerHTML,
+            //     //         Pret: document.getElementById("pr1").innerHTML,
+            //     //         Cantitate: 1,
+            //     //         Subtotal: ''
+            //     //     })
+            //     //     .then(() => {
+            //     //         alert("Produsul a fost adaugat in cosul de cumparaturi!");
+            //     //     })
+            //     //     .catch((error) => {
+            //     //         alert("Eroare: " + error);
+            //     //     })
+            //         // if(confirmAction2){
+            //             window.location.href = "/form_cart.html";
+            //         // }
+            //    // }
+            // })
+
+           
+
+            
+            
+            get(child(dbRef, "Produse/" + key)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // MODIFICAREA IMAGINILOR IN FUNCTIE DE CULOAREA SELECTATA
+                    // BLACK
+                    var black = document.getElementById("black" + key);
+                    black.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Negru.PozaFata;
+                        td2i.src = snapshot.val().Culori.Negru.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // WHITE
+                    var white = document.getElementById("white" + key);
+                    white.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Alb.PozaFata;
+                        td2i.src = snapshot.val().Culori.Alb.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // BLUE
+                    var blue = document.getElementById("blue" + key);
+                    blue.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Albastru.PozaFata;
+                        td2i.src = snapshot.val().Culori.Albastru.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // RED
+                    var red = document.getElementById("red" + key);
+                    red.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Rosu.PozaFata;
+                        td2i.src = snapshot.val().Culori.Rosu.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // GREEN
+                    var green = document.getElementById("green" + key);
+                    green.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Verde.PozaFata;
+                        td2i.src = snapshot.val().Culori.Verde.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // PURPLE
+                    var purple = document.getElementById("purple" + key);
+                    purple.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Mov.PozaFata;
+                        td2i.src = snapshot.val().Culori.Mov.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // BEIGE
+                    var beige = document.getElementById("beige" + key);
+                    beige.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Bej.PozaFata;
+                        td2i.src = snapshot.val().Culori.Bej.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                    // PINK
+                    var pink = document.getElementById("pink" + key);
+                    pink.addEventListener('click', () => {
+                        td2.src = snapshot.val().Culori.Roz.PozaFata;
+                        td2i.src = snapshot.val().Culori.Roz.PozaSpate;
+                        $('#divImg').load(document.URL +  '  #divImg');
+                    })
+                }
+            })
+
+
+            // EVENIMENT PENTRU STERGEREA PRODUSELOR DE CATRE UTILIZATORUL CU ROL DE ADMIN
+            btnDelete.addEventListener('click', () => {
+                console.log("delete");
+                let confirmRemove = confirm("Sunteti sigur ca doriti sa stergeti acest produs definitiv?");
+                if(confirmRemove){
+                    remove(child(dbRef, "Produse/" + key))
+                    .then(() => {
+                        alert("Produsul a fost sters din baza de date!");
+                        $('#divBody').load(document.URL +  '  #divBody');
+                        GetAllData();
+                    })
+                    .catch((error) => {
+                        alert("Eroare: " + error);
+                    })
+                }
+            })
+            
+            prodMap.set(td1.id, key);
+            console.log("ProdMap:"); 
+            console.log(prodMap);
+            var love = document.getElementById("love" + count);
+            // EVENIMENT PENTRU ADAUGAREA PRODUSELOR LA FAVORITE
+            love.addEventListener('click', () => {
+                if(td1.children[0].classList.contains("inactiveHeart") === true){
+                    td1.children[0].classList.remove("inactiveHeart");
+                    td1.children[0].classList.add("activeHeart");
+                    
+                    let key = prodMap.get(td1.id);
+                    console.log("Cheie event-love: " + key);
+
+                    let allFavorite = new Set();
+                    if(favoriteBy){
+                        allFavorite.add(uid);
+                        favoriteBy.forEach(item => {
+                            allFavorite.add(item);
+                        })
+                    }else{
+                        allFavorite.add(uid); 
+                    }
+
+                    console.log("Lista de utilizatori cu produs favorit:");
+                    console.log(allFavorite);
+
+
+                    update(child(dbRef, "Produse/" +  key), {
+                        FavoriteBy: Array.from(allFavorite)
+                    })
+                    .then(()=>{
+                        console.log("ListaFav a fost actualizata");
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    })
+                }
+                else{
+                    td1.children[0].classList.remove("activeHeart");
+                    td1.children[0].classList.add("inactiveHeart");
+                    
+
+                    console.log("UID-ul curent:");
+                    console.log(uid);
+
+                    let updatedList = favoriteBy.filter(item => {
+                        item != uid;
+                    });
+
+                    console.log("Lista de utilizatori cu produs favorit dupa stergere:");
+                    console.log(updatedList);
+
+                    update(child(dbRef, "Produse/" +  key), {
+                        FavoriteBy: updatedList
+                    })
+                    .then(()=>{
+                        console.log("ListaFav a fost actualizata");
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+                    })
+                }
+            });
+
+            prodCart.set(td6.id, key);
+            console.log("ProdCart:"); 
+            console.log(prodCart);
+
+            
+            var cos = document.getElementById("cos" + count);
+            // EVENIMENT PENTRU ADAUGAREA PRODUSELOR IN COSUL DE CUMPARATURI
+            cos.addEventListener('click', () => {
+                let cartKey = prodCart.get(td6.id);
+                console.log("Cheie event-cos: " + cartKey);
+                
+                console.log("Nr prod  "+ countProd);
+                /*************************************************/
+                update(child(dbRef, "Produse/" +  cartKey + "/BoughtBy/" + uid), {
+                    Cantitate: countProd,
+                    Subtotal: pret*countProd
+                })
+                .then(()=>{
+                    console.log("BoughtBy a fost actualizat");
+                })
+                .catch((error)=>{
+                    console.log(error);
+                })
+
+                //problema count
+            })
+            
+            count ++;
+
+            if(favoriteBy && favoriteBy.includes(uid)){
+                console.log("loveOn--------------------");
+                td1.children[0].classList.remove("inactiveHeart");
+                td1.children[0].classList.add("activeHeart");
+            }else{
+                console.log("loveOff--------------------");
+                td1.children[0].classList.remove("activeHeart");
+                td1.children[0].classList.add("inactiveHeart");
+            }
+        }
+
+        function AddAllItems(Produse){
+            divBody.innerHTML = "";
+            Produse.forEach(element => {
+                console.log("Cheia produsului adaugat:");
+                console.log(element.key);
+                console.log("FavoriteBy:");
+                console.log(element.val().FavoriteBy);
+                
+                AddItem(element.key, element.val().Brand, element.val().Poza, element.val().Poza2, element.val().Nume, element.val().Pret, element.val().Reducere, element.val().FavoriteBy);
+                
+            })
+        }
+
+        function GetAllData(){
+            const dbRef = ref(db);
+            get(child(dbRef, "Produse/" ))
+            .then((snapshot) => {
+                var prod = [];
+                snapshot.forEach(childSnapshot => {
+                    console.log("Child -> id-urile produselor:");
+                    console.log(childSnapshot.key);
+                    prod.push(childSnapshot);
+                });
+                //console.log(prod);
+                AddAllItems(prod);
+            })
+            .catch((error) => {
+                console.log("Mesaj eroare " + error);
+            })
+        }
+        window.onload = GetAllData;
+    </script>
+
+
+    <!-- SCRIPT PENTRU TRIMITEREA LA PAGINA DE DETALII -->
+    <script>
+
+        function action() {
+            window.location.href = "form_details.html";
+        }
+
+    </script> 
+
+
+    <!-- ELEMENTELE DIN FOOTER -->
+     <footer class="section-p1">
+        <div class="col">
+            <img class="logof" src="img/home_logo.jpg" alt="">
+            <p>I was sad but then I bought something online.<br>I feel better now.</p>
+            <h4>Follow Us</h4>
+            <div class="icon">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook fb"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram ig"></i></a>
+                <a href="https://www.snapchat.com/"><i class="fab fa-snapchat sc"></i></a>
+                <a href="https://twitter.com/?lang=ro"><i class="fab fa-twitter tw"></i></a>
+            </div>
+        </div>
+    </footer> 
+
+</body>
+</html>
